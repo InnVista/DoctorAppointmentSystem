@@ -1,0 +1,256 @@
+/* General Reset */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  h2 {
+    color: #3498db;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Main Content Layout */
+  .info-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  
+  .patient-info, .appointment-info {
+    width: 48%;
+  }
+  
+  .patient-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .patient-photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid #3498db;
+  }
+  
+  .patient-details {
+    margin-left: 20px;
+  }
+  
+  .patient-details h3 {
+    color: #34495e;
+    margin-bottom: 10px;
+  }
+  
+  .patient-details p {
+    font-size: 1rem;
+    color: #7f8c8d;
+  }
+  
+  .appointment-info {
+    padding: 15px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .appointment-info h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+  }
+  
+  .appointment-info p {
+    font-size: 1.1rem;
+    color: #34495e;
+    margin-bottom: 10px;
+  }
+  
+  /* Action Buttons */
+  .appointment-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .action-btn {
+    padding: 12px 25px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .action-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Add Notes Section */
+  .add-notes {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-notes h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+  }
+  
+  .add-notes textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-notes button {
+    background-color: #2980b9;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-notes button:hover {
+    background-color: #1c6fa5;
+  }
+  
+  /* Previous Visits Section */
+  .previous-visits {
+    margin-top: 30px;
+  }
+  
+  .previous-visits h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+  }
+  
+  .previous-visits ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .previous-visits ul li {
+    background-color: #ecf0f1;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .previous-visits ul li p {
+    margin: 0;
+    color: #34495e;
+  }
+  
+  /* Go Back Button */
+  .go-back-btn {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    padding: 15px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .go-back-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Footer Styling */
+  footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .footer-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+  }
+  
+  .footer-links a:hover {
+    color: #3498db;
+  }
+/* Modal Container */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  .modal-content h3 {
+    margin-top: 0;
+    color: #3498db;
+  }
+  
+  .modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+  
+  .modal-content input,
+  .modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Close Button */
+  .modal .close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 1.5rem;
+    color: #aaa;
+    cursor: pointer;
+  }
+  
+  .modal .close:hover {
+    color: #000;
+  }
+    

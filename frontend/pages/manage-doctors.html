@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Doctors</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/manage-doctors.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="../images/logo.png" alt="Healthcare Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="admin-dashboard.html">Admin Dashboard</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="dashboard-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="manage-doctors.html" class="active">Manage Doctors</a></li>
+        <li><a href="manage-patient.html">Manage Patients</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Admin Panel -->
+    <div class="admin-container">
+      <h2>Manage Doctors</h2>
+
+      <div class="add-form">
+        <input type="text" id="doctorName" placeholder="Full Name" />
+        <input type="email" id="doctorEmail" placeholder="Email" />
+        <input type="text" id="doctorSpecialization" placeholder="Specialization" />
+        <button id="addDoctorBtn">Add Doctor</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Specialization</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="doctorList">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Doctor Appointment Management System</p>
+  </footer>
+
+  <!-- Edit Confirmation Popup -->
+  <div id="editPopupOverlay" class="modal-overlay">
+    <div class="modal">
+      <h3>Are you sure you want to edit this doctor's details?</h3>
+      <div class="modal-buttons">
+        <button class="confirm-btn" id="confirmEditBtn">Yes</button>
+        <button class="cancel-btn" id="cancelEditBtn">No</button>
+      </div>
+    </div>
+  </div>
+  <div id="editDoctorModal" class="modal-overlay">
+    <div class="modal">
+      <h3>Edit Doctor Details</h3>
+      <input type="text" id="editName" placeholder="Full Name" />
+      <input type="email" id="editEmail" placeholder="Email" />
+      <input type="text" id="editSpecialization" placeholder="Specialization" />
+      <div class="modal-buttons">
+        <button class="confirm-btn" id="saveEditBtn">Save</button>
+        <button class="cancel-btn" id="cancelEditModalBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script src="../js/manage-doctors.js"></script>
+</body>
+</html>

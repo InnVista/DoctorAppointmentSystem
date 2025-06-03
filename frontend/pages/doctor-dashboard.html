@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor Dashboard - Doctor Appointment Management</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../js/doctor-dashboard.js" defer></script>
+</head>
+<body>
+     
+<!-- Header -->
+<header>
+      <div class="logo">
+        <img src="../images/logo.png" alt="Healthcare Logo">
+      </div>  
+   <nav>
+        <ul>
+          <li><a href="#">Doctor Dashboard</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </nav>
+  </header>
+
+<!-- Dashboard Body -->
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <ul>
+      <li><a href="#" class="active">Dashboard</a></li>
+      <li><a href="../pages/doctor-appointment-overview.html">My Appointments</a></li>
+      <li><a href="doctor-patients.html">Patient Records</a></li>
+      
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+    <h2>Welcome, Dr. John Doe</h2>
+    <p>Your patient insights and appointment overview</p>
+
+    <!-- Stats Boxes -->
+    <div class="stats-boxes">
+      <div class="stats-box">
+        <h3>Today's Appointments</h3>
+        <p>8</p>
+      </div>
+      <div class="stats-box">
+        <h3>Total Patients</h3>
+        <p>150</p>
+      </div>
+      <div class="stats-box">
+        <h3>Average Consultation Time</h3>
+        <p>20 mins</p>
+      </div>
+      <div class="stats-box">
+        <h3>Pending Messages</h3>
+        <p>5</p>
+      </div>
+    </div>
+
+    <!-- Graphs Section -->
+    <section class="graphs-section">
+      <h2>Patient Insights</h2>
+
+      <div class="graphs-container">
+        <div class="graph-card">
+          <canvas id="dailyAppointmentsChart"></canvas>
+        </div>
+        <div class="graph-card">
+          <canvas id="diagnosedCasesChart"></canvas>
+        </div>
+      </div>
+
+      <div class="graphs-container">
+        <div class="graph-card">
+          <canvas id="patientAgeChart"></canvas>
+        </div>
+        <div class="graph-card">
+          <canvas id="consultationTimeChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms</a> |
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-contact">
+      © 2025 Doctor Appointment Management System
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

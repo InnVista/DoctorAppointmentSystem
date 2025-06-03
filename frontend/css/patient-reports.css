@@ -1,0 +1,147 @@
+/* Basic Layout and Typography */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  }
+  
+  h2 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* File Upload Section */
+  .upload-section {
+    text-align: center; /* Centering the file upload section */
+    margin-bottom: 40px;
+  }
+  
+  .upload-section input[type="file"] {
+    display: none; /* Hide the default file input */
+  }
+  
+  .upload-section label {
+    background-color: #0077b6;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    display: inline-block; /* Ensures the label stays inline */
+  }
+  
+  .upload-section label:hover {
+    background-color: #005f87;
+  }
+  
+  #uploadBtn {
+    background-color: #0077b6;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  
+  #uploadBtn:hover {
+    background-color: #005f87;
+  }
+  
+  /* Analysis Section */
+  .analysis-section {
+    margin-bottom: 40px;
+    text-align: center; /* Centering the analyze button */
+  }
+  
+  #analyzeBtn {
+    background-color: #0077b6;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  
+  #analyzeBtn:hover {
+    background-color: #005f87;
+  }
+  
+  #analysisOutput {
+    background: #f1f3f5;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 100px;
+    display: none; /* Initially hidden */
+  }
+  
+  /* Previous Reports Section */
+  .report-list-section {
+    margin-bottom: 40px;
+  }
+  
+  .report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .report-card {
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .report-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .report-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .report-card p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  .report-card .view-report {
+    background-color: #0077b6;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .report-card .view-report:hover {
+    background-color: #005f87;
+  }
+  
+  /* Sidebar and Footer Styling */
+  footer {
+    background-color: #0077cc;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+  

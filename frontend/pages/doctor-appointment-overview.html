@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor - Appointments Overview</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/doctor/appointments.css">
+  <script src="../js/doctor-appointments-overview.js" defer></script>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <img src="../images/logo.png" alt="Healthcare Logo">
+  </div>  
+  <nav>
+    <ul>
+      <li><a href="doctor-dashboard.html">Doctor Dashboard</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <ul>
+      <li><a href="doctor-dashboard.html">Dashboard</a></li>
+      <li><a href="../pages/doctor-appointment-overview.html" class="active">My Appointments</a></li>
+      <li><a href="doctor-patients.html">Patient Records</a></li>
+      
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+    <div class="appointments-header">
+      <h2>Appointments Overview</h2>
+      <button class="new-appointment-btn" id="newAppointmentBtn">+ New Appointment</button>
+    </div>
+    <p>Manage your upcoming appointments and view history</p>
+
+    <!-- Tabs for Upcoming and History -->
+    <div class="tab-container">
+        <button class="tab-button" id="todayTab" data-tab="today">Today</button>
+      <button class="tab-button" id="upcomingTab" data-tab="upcoming">Upcoming</button>
+      <button class="tab-button" id="historyTab" data-tab="history">History</button>
+    </div>
+
+    <!-- Appointments Table -->
+    <section class="appointments-section">
+      <div class="appointments-table-wrapper">
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Patient Name</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentsBody">
+            <!-- Appointments loaded by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms</a> |
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-contact">
+      © 2025 Doctor Appointment Management System
+    </div>
+  </div>
+</footer>
+
+<div id="cancelModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>Cancel Appointment</h3>
+      <p>Are you sure you want to cancel this appointment?</p>
+      <div class="modal-buttons">
+        <button id="confirmCancelBtn" class="confirm-btn">Yes, Cancel</button>
+        <button id="closeModalBtn" class="cancel-btn">No, Go Back</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Reschedule Appointment Modal -->
+<div id="rescheduleModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3>Reschedule Appointment</h3>
+      <p>Change the appointment details:</p>
+      <label for="newDate">New Date:</label>
+      <input type="date" id="newDate" required>
+
+      <label for="newTime">New Time:</label>
+      <input type="time" id="newTime" required>
+      <p id="rescheduleAlert" class="alert-message" style="display: none; color: red; margin-bottom: 10px;">
+        Please select both date and time.
+      </p>
+      <div class="modal-buttons">
+        <button id="confirmRescheduleBtn" class="confirm-btn">Reschedule</button>
+        <button id="closeRescheduleModalBtn" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+</div>
+
+
+<!-- New Appointment Modal -->
+<div id="newAppointmentModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content appointment-modal">
+    <span class="close-btn" id="closeAppointmentModalBtn">&times;</span>
+    <h3>New Appointment</h3>
+    <form id="appointmentForm" class="appointment-form">
+      <label for="patientName">Patient Name *</label>
+      <input type="text" id="patientName" required>
+
+      <label for="patientId">Patient ID (Optional)</label>
+      <input type="text" id="patientId">
+
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+
+      <label for="appointmentDate">Date *</label>
+      <input type="date" id="appointmentDate" required>
+
+      <label for="appointmentTime">Time *</label>
+      <input type="time" id="appointmentTime" required>
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" rows="3"></textarea>
+
+      <div class="form-error" id="formError" style="color: red; display: none;"></div>
+
+      <div class="modal-buttons">
+        <button type="submit" class="confirm-btn">Book</button>
+        <button type="button" class="cancel-btn" id="closeAppointmentModal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>
+

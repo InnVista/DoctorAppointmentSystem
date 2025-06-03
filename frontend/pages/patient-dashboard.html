@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patient Dashboard - Doctor Appointment Management</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="../js/patient-dashboard.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">
+      <img src="../images/logo.png" alt="Healthcare Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="patient-dashboard.html">Patient Dashboard</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+</header>
+
+<!-- Dashboard Body -->
+<div class="dashboard-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">  
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <ul>
+      <li><a href="patient-dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="patient-appointments.html">My Appointments</a></li>
+      <li><a href="patient-reports.html">My Reports</a></li>
+      <li><a href="symptom-checker.html">Symptom checker</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+    <h2>Welcome, Alex</h2>
+    <p>Here’s your health overview and appointment history</p>
+
+    <!-- Stats Boxes -->
+    <div class="stats-boxes">
+      <div class="stats-box">
+        <h3>Upcoming Appointments</h3>
+        <p>2</p>
+      </div>
+      <div class="stats-box">
+        <h3>Reports Available</h3>
+        <p>5</p>
+      </div>
+      <div class="stats-box">
+        <h3>Prescriptions</h3>
+        <p>3</p>
+      </div>
+      <div class="stats-box">
+        <h3>Last Visit</h3>
+        <p>12 April 2025</p>
+      </div>
+    </div>
+
+    <!-- Graphs Section -->
+    <section class="graphs-section">
+      <h2>Health Analytics</h2>
+
+      <div class="graphs-container">
+        <div class="graph-card">
+          <canvas id="appointmentHistoryChart"></canvas>
+        </div>
+        <div class="graph-card">
+          <canvas id="vitalsTrendChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms</a> |
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-contact">
+      © 2025 Doctor Appointment Management System
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
