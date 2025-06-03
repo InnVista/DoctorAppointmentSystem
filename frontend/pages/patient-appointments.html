@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Appointments</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/patient-appointments.css" />
+  <script src="../js/patient-appointments.js" defer></script>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="../images/logo.png" alt="Healthcare Logo">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="patient-dashboard.html">Patient Dashboard</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="dashboard-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">  
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <ul>
+      <li><a href="patient-dashboard.html" >Dashboard</a></li>
+      <li><a href="patient-appointments.html" class="active">My Appointments</a></li>
+      <li><a href="patient-reports.html">My Reports</a></li>
+      <li><a href="symptom-checker.html">Symptom checker</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h2>My Appointments</h2>
+    <div id="appointmentsContainer"></div>
+    <button id="addAppointmentBtn" class="primary-btn">+ Add Appointment</button>
+
+<!-- Add Appointment Modal -->
+<div id="appointmentModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="modalClose">&times;</span>
+    <h3>New Appointment</h3>
+    <form id="newAppointmentForm">
+      <label>Doctor</label>
+      <input type="text" id="doctorName" required />
+
+      <label>Specialty</label>
+      <input type="text" id="specialty" required />
+
+      <label>Date</label>
+      <input type="date" id="appointmentDate" required />
+
+      <label>Time</label>
+      <input type="time" id="appointmentTime" required />
+
+      <button type="submit" class="primary-btn">Save</button>
+    </form>
+  </div>
+</div>
+  </main>
+</div>
+
+<footer>
+  <div>© 2025 Doctor Appointment Management System</div>
+</footer>
+
+</body>
+</html>

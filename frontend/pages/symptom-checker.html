@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Symptom Checker</title>
+    <link rel="stylesheet" href="../css/symptom-checker.css" />
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="../js/symptom-checker.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="../images/logo.png" alt="Healthcare Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="patient-dashboard.html">Patient Dashboard</a></li>
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Dashboard Body -->
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+        <ul>
+          <li><a href="patient-dashboard.html">Dashboard</a></li>
+          <li><a href="patient-appointments.html">My Appointments</a></li>
+          <li><a href="patient-reports.html" >My Reports</a></li>
+          <li><a href="symptom-checker.html" class="active">Symptom checker</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </aside>
+  
+
+        <main class="container">
+            <form id="symptomForm">
+                <h2>Select your symptoms:</h2>
+                <div class="symptom-grid">
+                    <label><input type="checkbox" value="fever"> Fever</label>
+                    <label><input type="checkbox" value="cough"> Cough</label>
+                    <label><input type="checkbox" value="headache"> Headache</label>
+                    <label><input type="checkbox" value="nausea"> Nausea</label>
+                    <label><input type="checkbox" value="fatigue"> Fatigue</label>
+                    <label><input type="checkbox" value="shortness of breath"> Shortness of Breath</label>
+                    <label><input type="checkbox" value="chest pain"> Chest Pain</label>
+                    <label><input type="checkbox" value="sore throat"> Sore Throat</label>
+                    <label><input type="checkbox" value="diarrhea"> Diarrhea</label>
+                    <label><input type="checkbox" value="dizziness"> Dizziness</label>
+                </div>
+                <button id="symptom-submit" type="submit">Check</button>
+            </form>
+
+            <!-- Result Box (Initially Hidden) -->
+            <div id="result" class="result-box" style="display: none;"></div>
+
+            <!-- Doctor Suggestions (Initially Hidden) -->
+            <div id="doctor-suggestions" class="doctor-suggestions" style="display: none;">
+                <h3>Suggested Doctors:</h3>
+                <ul id="doctor-list"></ul>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>© 2025 Doctor Appointment Management System</p>
+    </footer>
+</body>
+</html>

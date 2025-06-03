@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Patients - Doctor Dashboard</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/patients.css" />
+  <script src="../js/admin-patients.js" defer></script>
+</head>
+<body>
+
+     
+<!-- Header -->
+<header>
+    <div class="logo">
+      <img src="../images/logo.png" alt="Healthcare Logo">
+    </div>  
+ <nav>
+      <ul>
+        <li><a href="admin-dashboard.html">Admin Dashboard</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+</header>
+
+<!-- Dashboard Body -->
+<div class="dashboard-container">
+<!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <ul>
+      <li><a href="admin-dashboard.html" >Dashboard</a></li>
+      <li><a href="manage-doctors.html">Manage Doctors</a></li>
+      <li><a href="doctor-patients.html" class="active">Manage Patients</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dashboard-content">
+    <div class="patients-header">
+      <h2>Patients</h2>
+      <button id="addPatientBtn" class="add-btn">+ New Patient</button>
+    </div>
+    <p>Manage and view your patients</p>
+
+    <div class="patients-table-wrapper">
+      <table class="patients-table">
+        <thead>
+          <tr>
+            <th>Patient ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Condition</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="patientsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </main>
+</div>
+
+<!-- Add Patient Modal -->
+<div id="addPatientModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+    <span class="close-btn" id="closeAddPatientModal">&times;</span>
+    <h3>Add New Patient</h3>
+    <form id="addPatientForm">
+      <input type="text" id="patientId" placeholder="Patient ID" required />
+      <input type="text" id="patientName" placeholder="Name" required />
+      <input type="number" id="age" placeholder="Age" required />
+      <select id="gender" required>
+        <option value="">Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+      <input type="tel" id="phone" placeholder="Phone Number" pattern="[0-9]{10}" required />
+      <input type="text" id="condition" placeholder="Medical Condition" />
+
+      <div class="modal-buttons">
+        <button type="submit" class="confirm-btn">Add</button>
+        <button type="button" class="cancel-btn" id="cancelAddPatient">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+
+
+  <!-- Footer -->
+  <footer>
+    <div>© 2025 Doctor Appointment Management System</div>
+  </footer>
+
+</body>
+</html>

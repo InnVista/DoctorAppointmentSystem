@@ -1,0 +1,248 @@
+/* Font and Reset */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    min-height: 100vh;
+  }
+  
+  /* Header */
+ 
+  header {
+    background-color: #0077cc;
+    padding: 18px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* This will space out the logo and navigation */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  header .logo {
+    flex: 1; /* Allow the logo to take up available space */
+  }
+  
+  header .logo img {
+    height: 45px;
+  }
+  
+  header nav {
+    flex: 1; /* Allow the nav to take up available space */
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+  }
+  
+  header nav ul {
+    display: flex;
+    list-style: none;
+  }
+  
+  header nav ul li {
+    margin-left: 25px;
+  }
+  
+  header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s;
+  }
+  
+  header nav ul li a:hover {
+    color: #ffdd99;
+  }
+/* Layout */
+.dashboard-container {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  transition: all 0.3s ease;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(to bottom, #ffffff, #e9ecef);
+  padding: 30px 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  border-right: 1px solid #ccc;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 20px;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.sidebar ul li a.active,
+.sidebar ul li a:hover {
+  background-color: #0077cc;
+  color: #fff;
+  box-shadow: 0px 3px 6px rgba(46, 125, 255, 0.3);
+}
+
+/* Main Content */
+.dashboard-content {
+  flex-grow: 1;
+  padding: 40px 30px;
+}
+
+.dashboard-content h2 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #0077cc;
+}
+
+.dashboard-content p {
+  margin-bottom: 30px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Stats Boxes */
+.stats-boxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.stats-box {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stats-box:hover {
+  transform: translateY(-5px);
+}
+
+.stats-box h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.stats-box p {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0077cc;
+}
+
+/* Graphs Section */
+.graphs-section h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #0077cc;
+}
+
+.graphs-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.graph-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.graph-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Footer */
+footer {
+  background-color: #0077cc;
+  padding: 20px 30px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  margin-top: 30px;
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 5px;
+  text-decoration: none;
+  transition: text-decoration 0.3s;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* Sidebar Hidden State */
+.sidebar.collapsed {
+  width: 80px; /* or 0 if you want full collapse */
+}
+
+.sidebar.collapsed ul {
+  display: none;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 5px;
+}
+.sidebar-toggle img {
+  height: 30px;
+}
+
+/* Add transition for smooth effect */
+.sidebar {
+  width: 250px; /* Sidebar width when expanded */
+  background: linear-gradient(to bottom, #ffffff, #e9ecef);
+  padding: 30px 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  border-right: 1px solid #ccc;
+  transition: width 0.3s ease
+}
+
+.logout {
+  margin-bottom: 20 px;
+}
+
+.sidebar-placeholder{
+  width: 250px; /* Sidebar width when expanded */
+  background: linear-gradient(to bottom, #ffffff, #e9ecef);
+  padding: 30px 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  border-right: 1px solid #ccc;
+  transition: width 0.3s ease
+  
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Book New Appointment</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/doctor/appointments.css">
+  <link rel="stylesheet" href="../css/new-appointment.css">
+
+  <script defer src="../js/new-appointment.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <img src="../images/logo.png" alt="Healthcare Logo" />
+  </div>
+  <nav>
+    <ul>
+      <li><a href="doctor-dashboard.html">Doctor Dashboard</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <ul>
+      <li><a href="doctor-dashboard.html">Dashboard</a></li>
+      <li><a href="../pages/doctor-appointment-overview.html">My Appointments</a></li>
+      <li><a href="doctor-patients.html">Patient Records</a></li>
+      
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+    <h2>Book New Appointment</h2>
+    <p>Enter details to book a new appointment</p>
+
+    <form id="appointmentForm" class="appointment-form">
+      <div class="form-group">
+        <label for="patientName">Patient Name:</label>
+        <input type="text" id="patientName" name="patientName" required />
+      </div>
+
+      <div class="form-group">
+        <label for="appointmentDate">Date:</label>
+        <input type="date" id="appointmentDate" name="appointmentDate" required />
+      </div>
+
+      <div class="form-group">
+        <label for="appointmentTime">Time:</label>
+        <input type="time" id="appointmentTime" name="appointmentTime" required />
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Reason:</label>
+        <textarea id="reason" name="reason" rows="4" placeholder="Describe the reason..." required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Book Appointment</button>
+    </form>
+
+    <div id="formMessage" style="display: none; margin-top: 10px;"></div>
+  </main>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms</a> |
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-contact">
+      © 2025 Doctor Appointment Management System
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

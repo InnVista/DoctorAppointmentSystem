@@ -1,0 +1,274 @@
+.admin-container {
+    flex: 1;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin: 20px;
+    border-radius: 10px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .add-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+  
+  .add-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1 1 200px;
+  }
+  
+  .add-form button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-form button:hover {
+    background: #0056b3;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .action-btn {
+    padding: 6px 10px;
+    margin: 0 3px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .edit-btn {
+    background-color: #ffc107;
+  }
+  
+  .deactivate-btn {
+    background-color: #6c757d;
+  }
+  
+  .delete-btn {
+    background-color: #dc3545;
+  }
+  
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    z-index: 1001;
+    text-align: center;
+  }
+  
+  .modal h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  
+  .modal-buttons .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .modal-buttons button:hover {
+    opacity: 0.9;
+  }
+  
+  .close {
+    align-self: flex-end;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  /* Error message styling */
+.error-message {
+    color: #dc3545; /* Red color for error messages */
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* Edit Doctor input box styling */
+.modal-content input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px; /* Increased padding for better spacing */
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
+/* Adding space between modal buttons */
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between; /* Spread out buttons */
+    gap: 15px;
+}
+
+.modal-buttons .confirm-btn {
+    background-color: #28a745; /* Green for confirm */
+    color: white;
+}
+
+
+.modal-buttons button:hover {
+    opacity: 0.9;
+}
+
+/* Edit Doctor modal input styling */
+.modal-content input {
+    width: 100%;
+    margin: 15px 0; /* Increased margin for spacing */
+    padding: 12px 18px; /* More padding for a comfortable input experience */
+    font-size: 16px;
+    border-radius: 8px; /* Rounded corners for a smooth look */
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    background-color: #f9f9f9; /* Light background color */
+    transition: all 0.3s ease; /* Smooth transition for border and background */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+}
+
+/* Focus effects for input fields */
+.modal-content input:focus {
+    border-color: #007bff; /* Blue border on focus */
+    outline: none;
+    background-color: #eaf2ff; /* Light blue background on focus */
+    box-shadow: inset 0 2px 10px rgba(0, 123, 255, 0.2), 0 0 5px rgba(0, 123, 255, 0.3); /* Blue glow effect */
+}
+
+/* Error input styling */
+.modal-content input.error {
+    border-color: #dc3545; /* Red border for error */
+    background-color: #f8d7da; /* Light red background for error */
+    box-shadow: inset 0 2px 5px rgba(220, 53, 69, 0.2); /* Subtle red inner shadow */
+}
+
+/* Styling for the edit doctor modal buttons */
+.modal-buttons button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* Confirm button */
+.modal-buttons .confirm-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.modal-buttons .confirm-btn:hover {
+    background-color: #218838;
+}
+
+/* Cancel button */
+.modal-buttons .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.modal-buttons .cancel-btn:hover {
+    background-color: #c82333;
+}
+
+/* Make the input fields look more modern and aligned */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Spacing between input fields */
+    align-items: center;
+}
+
+
+/* Better spacing and styling for the input fields in the add doctor form */
+.add-form input {
+    padding: 12px; /* Increased padding for better user experience */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1 1 200px;
+    box-sizing: border-box;
+}
+
+.add-form input:focus {
+    border-color: #007bff; /* Blue border on focus */
+    outline: none;
+}
+
+.add-form button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 18px; /* Increased padding */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-form button:hover {
+    background: #0056b3;
+}

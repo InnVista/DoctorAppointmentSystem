@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor - Appointments Overview</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/appointments-overview.js" defer></script>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Healthcare Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="appointments-overview.html">Appointments Overview</a></li>
+        <li><a href="doctor-patients.html">Patient Records</a></li>
+        
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="page-title">
+      <h2>Upcoming Appointments</h2>
+      <p>Manage your upcoming appointments and patient interactions here.</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+      <button class="btn add-appointment">Add New Appointment</button>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="appointments-table-container">
+      <table id="appointmentsTable">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="appointmentsBody">
+          <!-- Appointments will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>© 2025 Doctor Appointment Management System</div>
+  </footer>
+</body>
+</html>
