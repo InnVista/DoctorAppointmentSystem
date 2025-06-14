@@ -1,3 +1,4 @@
+console.log("Home page loaded successfully!");
 // Get all the sections and links
 const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('.nav-link');
