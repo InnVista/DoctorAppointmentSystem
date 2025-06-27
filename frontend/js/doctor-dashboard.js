@@ -121,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   document.addEventListener("DOMContentLoaded", () => {
-    loadComponent("header-placeholder", "../pages/doctor/doctor-header.html");
-    loadComponent("sidebar-placeholder", "../pages/doctor/sidebar.html");
-    loadComponent("footer-placeholder", "../pages/doctor/footer.html");
+    // loadComponent("header-placeholder", "../pages/doctor/doctor-header.html");
+    // loadComponent("sidebar-placeholder", "../pages/doctor/sidebar.html");
+    // loadComponent("footer-placeholder", "../pages/doctor/footer.html");
   });
   
