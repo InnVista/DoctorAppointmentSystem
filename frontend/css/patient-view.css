@@ -116,4 +116,11 @@ body, html {
       padding: 20px;
     }
   }
-  
+
+  .form-group select {
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+  }

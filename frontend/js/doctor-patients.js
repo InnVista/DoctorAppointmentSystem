@@ -1,101 +1,72 @@
 document.addEventListener('DOMContentLoaded', () => {
-    renderPatients();
-    setupPagination();
+  fetchPatients();
+});
+
+let currentPage = 1;
+const pageSize = 10;
+
+// Fetch patients from backend (paginated)
+async function fetchPatients(page = 1) {
+  try {
+    const response = await secureFetch(`/api/patients/?page=${page}&page_size=${pageSize}`);
+    if (!response.ok) throw new Error("Failed to fetch patients");
+
+    const data = await response.json();
+    renderPatients(data.results);
+    setupPagination(data.count, page);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+// Render patient table rows
+function renderPatients(patients) {
+  const patientsBody = document.getElementById('patientsBody');
+  patientsBody.innerHTML = '';
+
+  patients.forEach(p => {
+    const fullName = `${p.first_name} ${p.last_name || ''}`.trim();
+    patientsBody.innerHTML += `
+      <tr>
+        <td>${p.id}</td>
+        <td>${fullName}</td>
+        <td>${p.age || '-'}</td>
+        <td>${p.gender || '-'}</td>
+        <td>${p.phone || '-'}</td>
+        <td>${p.condition || 'N/A'}</td>
+        <td>
+          <a href="../pages/patient-view.html?id=${p.id}" class="action-btn">View</a>
+        </td>
+      </tr>
+    `;
   });
-  
-  const patients = Array.from({ length: 50 }, (_, i) => ({
-    id: `P${1000 + i}`,
-    name: `Patient ${i + 1}`,
-    age: 20 + (i % 50),
-    gender: ['Male', 'Female', 'Other'][i % 3],
-    phone: `99999${(10000 + i).toString().slice(-5)}`,
-    condition: ['Diabetes', 'Flu', 'Heart Issues'][i % 3],
-  }));
-  
-  const pageSize = 15;
-  let currentPage = 1;
-  
-  function renderPatients() {
-    const patientsBody = document.getElementById('patientsBody');
-    patientsBody.innerHTML = '';
-  
-    const start = (currentPage - 1) * pageSize;
-    const paginatedPatients = patients.slice(start, start + pageSize);
-  
-    paginatedPatients.forEach(p => {
-      patientsBody.innerHTML += `
-        <tr>
-          <td>${p.id}</td>
-          <td>${p.name}</td>
-          <td>${p.age}</td>
-          <td>${p.gender}</td>
-          <td>${p.phone}</td>
-          <td>${p.condition}</td>
-          <td><a href="patient-view.html?id=${p.id}" class="action-btn">View</a></td>
-        </tr>
-      `;
+}
+
+// Render pagination controls
+function setupPagination(totalItems, currentPage) {
+  const pagination = document.getElementById('pagination');
+  const totalPages = Math.ceil(totalItems / pageSize);
+  pagination.innerHTML = '';
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    btn.classList.toggle('active', i === currentPage);
+    btn.addEventListener('click', () => {
+      fetchPatients(i);
     });
+    pagination.appendChild(btn);
   }
-  
-  function setupPagination() {
-    const totalPages = Math.ceil(patients.length / pageSize);
-    const pagination = document.getElementById('pagination');
-    pagination.innerHTML = '';
-  
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
-      btn.innerText = i;
-      btn.classList.toggle('active', i === currentPage);
-      btn.addEventListener('click', () => {
-        currentPage = i;
-        renderPatients();
-        setupPagination();
-      });
-      pagination.appendChild(btn);
-    }
-  }
-  
-  // Modal Logic
-  document.getElementById('addPatientBtn').addEventListener('click', () => {
-    document.getElementById('addPatientModal').style.display = 'flex';
-  });
-  
-  document.getElementById('closeAddPatientModal').addEventListener('click', () => {
-    document.getElementById('addPatientModal').style.display = 'none';
-  });
-  
-  document.getElementById('cancelAddPatient').addEventListener('click', () => {
-    document.getElementById('addPatientModal').style.display = 'none';
-  });
-  
-  document.getElementById('addPatientForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const newPatient = {
-      id: document.getElementById('patientId').value,
-      name: document.getElementById('patientName').value,
-      age: parseInt(document.getElementById('age').value),
-      gender: document.getElementById('gender').value,
-      phone: document.getElementById('phone').value,
-      condition: document.getElementById('condition').value,
-    };
-  
-    patients.push(newPatient);
-    currentPage = Math.ceil(patients.length / pageSize);
-    renderPatients();
-    setupPagination();
-    document.getElementById('addPatientModal').style.display = 'none';
+}
 
+// Redirect to new patient page
+document.getElementById('addPatientBtn').addEventListener('click', () => {
+  window.location.href = '../pages/new-patient.html';
+});
 
-  });
-
-  document.getElementById('addPatientBtn').addEventListener('click', () => {
-    window.location.href = 'new-patient.html';
-  });
-  
-  
+// Sidebar toggle
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('sidebarToggle');
-
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
 });

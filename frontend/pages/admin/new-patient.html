@@ -6,6 +6,7 @@
   <title>New Patient Form</title>
   <link rel="stylesheet" href="../../css/dashboard.css" />
   <link rel="stylesheet" href="../../css/new-patient.css">
+  <script src="../../js/auth.js" defer></script>
   <script src="../../js/new-patient.js" defer></script>
 </head>
 <body>
@@ -62,7 +63,7 @@
 
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit phone number" pattern="^\d{10}$" required />
+          <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit phone number" pattern="^\d{10}$" />
           <small class="error-message" id="phoneError">Please enter a valid 10-digit phone number</small>
         </div>
 
@@ -74,7 +75,7 @@
 
         <div class="form-group">
           <label for="address">Address</label>
-          <textarea id="address" name="address" placeholder="Enter address" rows="4" required></textarea>
+          <textarea id="address" name="address" placeholder="Enter address" rows="4"></textarea>
           <small class="error-message" id="addressError">Address is required</small>
         </div>
 
@@ -91,7 +92,7 @@
 
         <div class="form-group">
           <label for="emergencyContact">Emergency Contact</label>
-          <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="Enter emergency contact number" pattern="^\d{10}$" required />
+          <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="Enter emergency contact number" pattern="^\d{10}$" />
           <small class="error-message" id="emergencyContactError">Please enter a valid emergency contact number</small>
         </div>
 
@@ -115,6 +116,7 @@
   </footer>
   
 
-  <script src="../js/new-patient.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/new-patient.js"></script>
 </body>
 </html>
