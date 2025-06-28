@@ -1,31 +1,41 @@
-document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission for now
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const role = document.getElementById('role').value;
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    // Log the values for debugging
-    console.log(`Email: ${email}`);
-    console.log(`Password: ${password}`);
-    console.log(`Role: ${role}`);
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-    // Redirect based on role
-    let redirectUrl = '';
-    if (role === 'admin') {
-        redirectUrl = 'admin-dashboard.html';
-    } else if (role === 'doctor') {
-        redirectUrl = 'doctor-dashboard.html';
-    } else if (role === 'patient') {
-        redirectUrl = 'patient-dashboard.html';
-    }
+        const response = await fetch("/api/login/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        });
 
-    if (redirectUrl) {
-        window.location.href = redirectUrl; // Redirect to the corresponding dashboard
-    } else {
-        alert('Invalid role selection!');
-    }
+        const data = await response.json();
 
-    // In real-world use, we would send these details to the backend for validation
-    alert('Login details received! (Add backend integration later)');
+        if (response.ok) {
+            localStorage.setItem("accessToken", data.access);
+            localStorage.setItem("refreshToken", data.refresh);
+            localStorage.setItem("userRole", data.role);
+
+            alert("Login successful!");
+            
+            if (data.role === "admin") {
+                window.location.href = "admin-dashboard.html";
+            } else if (data.role === "doctor") {
+                window.location.href = "doctor-dashboard.html";
+            } else {
+                window.location.href = "patient-dashboard.html";
+            }
+        } else {
+            alert(data.message || "Login failed. Check your credentials.");
+        }
+    });
 });

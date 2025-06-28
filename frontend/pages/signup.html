@@ -28,26 +28,18 @@
 <div class="signup-container">
     <div class="signup-box">
         <h2>Create an Account</h2>
-        <form action="#" method="POST">
+        <form action="#" method="POST" id="signup-form">
             <div class="form-group">
                 <label for="name">Full Name:</label>
-                <input type="text" id="name" placeholder="Enter your full name" required>
+                <input type="text" id="name" name="username" placeholder="Enter your full name" required>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" placeholder="Create a password" required>
-            </div>
-            <div class="form-group">
-                <label for="role">Role:</label>
-                <select id="role" required>
-                    <option value="admin">Admin</option>
-                    <option value="doctor">Doctor</option>
-                    <option value="patient">Patient</option>
-                </select>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
             </div>
             <button type="submit">Sign Up</button>
         </form>

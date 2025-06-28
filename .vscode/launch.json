@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Django (New Debugger)",
+      "type": "debugpy",   // ✅ Updated here
+      "request": "launch",
+      "program": "${workspaceFolder}/doctor_backend/manage.py",
+      "args": ["runserver", "--noreload"],
+      "django": true
+    }
+  ]
+}
