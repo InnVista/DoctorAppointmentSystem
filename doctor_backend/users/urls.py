@@ -13,7 +13,7 @@ urlpatterns = [
     path('doctors/', DoctorListCreateView.as_view()),
     path('doctors/<int:pk>/', DoctorDetailView.as_view()),
     path('doctors/view/<int:pk>/', DoctorDetailViewForPatients.as_view()),
-    path('doctors/search', DoctorDetailSearchForPatients.as_view()),
+    path('doctors/search/', DoctorDetailSearchForPatients.as_view()),
 
     
     path('patients/', PatientListCreateView.as_view()),

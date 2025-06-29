@@ -87,8 +87,6 @@ class AppointmentDetailView(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AppointmentCancelView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request, pk):
         appointment = get_object_or_404(Appointment, pk=pk)
         appointment.status = 'cancelled'

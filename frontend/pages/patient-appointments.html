@@ -24,9 +24,9 @@
 </header>
 
 <div class="dashboard-container">
-  <!-- Sidebar -->
+
   <aside class="sidebar" id="sidebar">  
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
     <ul>
       <li><a href="patient-dashboard.html">Dashboard</a></li>
       <li><a href="patient-appointments.html" class="active">My Appointments</a></li>
@@ -36,7 +36,6 @@
     </ul>
   </aside>
 
-  <!-- Main Content -->
   <main class="main-content">
     <h2>My Appointments</h2>
 
@@ -54,23 +53,41 @@
         <span class="close" id="modalClose">&times;</span>
         <h3>New Appointment</h3>
         <form id="newAppointmentForm">
-          <label for="doctorName">Doctor</label>
-          <input type="text" id="doctorName" list="doctorList" autocomplete="off" required />
-          <datalist id="doctorList"></datalist>
+          <div class="form-group">
+            <label for="doctorName">Doctor *</label>
+            <input type="text" id="doctorName" autocomplete="off" required />
+            <ul id="doctorSuggestions" class="suggestions-list"></ul>
+            <input type="hidden" id="doctorId" />
+          </div>
 
-          <label for="specialty">Specialty</label>
-          <input type="text" id="specialty" disabled />
+          <div class="form-group">
+            <label for="specialty">Specialty</label>
+            <input type="text" id="specialty" readonly />
+          </div>
 
-          <label>Date</label>
-          <input type="date" id="appointmentDate" required />
+          <div class="form-group">
+            <label for="appointmentDate">Date *</label>
+            <input type="date" id="appointmentDate" required />
+          </div>
 
-          <label>Time</label>
-          <input type="time" id="appointmentTime" required />
+          <div class="form-group">
+            <label for="appointmentTime">Time *</label>
+            <input type="time" id="appointmentTime" required />
+          </div>
 
           <button type="submit" class="primary-btn">Save</button>
         </form>
       </div>
     </div>
+
+    <!-- View Appointment Modal -->
+    <div id="viewAppointmentModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="viewModalClose">&times;</span>
+        <div id="viewAppointmentContent"></div>
+      </div>
+    </div>
+
   </main>
 </div>
 
