@@ -62,6 +62,7 @@
         <p><strong>Date:</strong> <span id="appointmentDate"></span></p>
         <p><strong>Time:</strong> <span id="appointmentTime"></span></p>
         <p><strong>Reason:</strong> <span id="appointmentReason"></span></p>
+        <p><strong>Status:</strong> <span id="appointmentStatus"></span></p>
       </div>
     </div>
 
@@ -74,9 +75,17 @@
 
     <!-- Add Notes Section -->
     <div class="add-notes">
-      <h3>Add Notes</h3>
+      <h3>Doctor's Notes</h3>
       <textarea id="appointmentNotes" rows="4" placeholder="Add notes here..."></textarea>
+      <h3>Visit Reason:<h3>
+      <textarea id="notesReason" rows="4" placeholder="Add Reason here..."></textarea>
+
       <button id="saveNotesBtn" class="action-btn">Save Notes</button>
+    </div>
+    <!-- Doctor's Notes Section -->
+    <div class="doctor-notes-section">
+      <h3>Doctor's Notes</h3>
+      <p id="appointmentNotesDisplay"></p>
     </div>
 
     <!-- Previous Visits & Records -->
@@ -135,12 +144,11 @@
     <h3>Change Appointment Status</h3>
     <label for="statusSelect">Select Status:</label>
     <select id="statusSelect">
-      <option value="Scheduled">Scheduled</option>
-      <option value="Confirmed">Confirmed</option>
-      <option value="Completed">Completed</option>
-      <option value="Cancelled">Cancelled</option>
-      <option value="No Show">No Show</option>
-      <option value="Rescheduled">Rescheduled</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="started">Started</option>
+      <option value="completed">Completed</option>
+      <option value="cancelled">Cancelled</option>
+      <option value="no_show">No Show</option>
     </select>
     <button class="action-btn">Update Status</button>
   </div>

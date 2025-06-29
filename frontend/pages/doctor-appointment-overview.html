@@ -5,7 +5,7 @@
   <title>Doctor - Appointments Overview</title>
   <link rel="stylesheet" href="../css/dashboard.css">
   <link rel="stylesheet" href="../css/doctor/appointments.css">
-  
+  <script src="../js/auth.js"></script>
   <script src="../js/doctor-appointments-overview.js" defer></script>
 </head>
 <body>
@@ -131,12 +131,14 @@
     <form id="appointmentForm" class="appointment-form">
       <label for="patientName">Patient Name *</label>
       <input type="text" id="patientName" required>
+      <ul id="patientSuggestions" class="suggestions-list"></ul>
+
 
       <label for="patientId">Patient ID (Optional)</label>
       <input type="text" id="patientId">
 
       <label for="phone">Phone Number *</label>
-      <input type="tel" id="phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+      <input type="tel" id="phone" pattern="[0-9]{10}" placeholder="10-digit number">
 
       <label for="appointmentDate">Date *</label>
       <input type="date" id="appointmentDate" required>

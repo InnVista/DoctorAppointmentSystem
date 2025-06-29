@@ -290,6 +290,10 @@
   .close-btn:hover {
     color: #333;
   }
+  .appointment-form {
+  position: relative;
+}
+
   
   .appointment-form input, .appointment-form textarea {
     width: 100%;
@@ -304,4 +308,24 @@
     font-size: 14px;
     margin-bottom: 1rem;
   }
-      
+      .suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 10px 0;
+  border: 1px solid #ccc;
+  max-height: 120px;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  z-index: 1100;
+  width: 100%;
+}
+
+.suggestions-list li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}

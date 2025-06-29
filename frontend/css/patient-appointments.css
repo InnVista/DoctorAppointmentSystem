@@ -107,4 +107,12 @@ body {
     font-size: 20px;
     cursor: pointer;
   }
-  
+  .view-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.view-toggle .primary-btn {
+  flex: 1;
+}

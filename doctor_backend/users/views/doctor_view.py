@@ -44,6 +44,36 @@ class DoctorListCreateView(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+class DoctorDetailViewForPatients(APIView):
+
+    def get_object(self, pk):
+        return CustomUser.objects.get(pk=pk, role='doctor')
+
+    def get(self, request, pk):
+        doctor = self.get_object(pk)
+        serializer = DoctorSerializer(doctor)
+        return Response(serializer.data)
+
+class DoctorDetailSearchForPatients(APIView):    
+    def get(self, request):
+        search_query = request.query_params.get('search', '')
+
+        doctors = CustomUser.objects.filter(role='doctor')
+        if search_query:
+            doctors = doctors.filter(
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query) |
+                Q(specialization__icontains=search_query)
+            )
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 10  # Adjust page size as needed
+        result_page = paginator.paginate_queryset(doctors, request)
+        serializer = DoctorSerializer(result_page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
+
 
 class DoctorDetailView(APIView):
     permission_classes = [IsAdminUserRole]

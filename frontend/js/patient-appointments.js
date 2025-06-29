@@ -1,108 +1,153 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const appointments = [
-      {
-        doctor: "Dr. Emily Smith",
-        specialty: "Cardiologist",
-        date: "2025-05-10",
-        time: "10:30",
-        status: "Scheduled"
-      },
-      {
-        doctor: "Dr. Raj Patel",
-        specialty: "Dermatologist",
-        date: "2025-04-20",
-        time: "14:00",
-        status: "Completed"
-      },
-      {
-        doctor: "Dr. Aisha Khan",
-        specialty: "Neurologist",
-        date: "2025-04-15",
-        time: "11:00",
-        status: "Cancelled"
+  let appointments = [];
+
+  const container = document.getElementById("appointmentsContainer");
+  const upcomingBtn = document.getElementById("showUpcomingBtn");
+  const historyBtn = document.getElementById("showHistoryBtn");
+  const doctorInput = document.getElementById("doctorName");
+  const specialtyInput = document.getElementById("specialty");
+
+  // Load appointments on page load
+  function fetchAppointments() {
+    secureFetch("/api/appointments/", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
       }
-    ];
-  
-    const container = document.getElementById("appointmentsContainer");
-  
-    function renderAppointments() {
-      container.innerHTML = "";
-      appointments.forEach((app, index) => {
-        const card = document.createElement("div");
-        card.classList.add("appointment-card");
-  
-        if (app.status === "Completed") {
-          card.classList.add("completed");
-        } else if (app.status === "Cancelled") {
-          card.classList.add("cancelled");
-        }
-  
-        card.innerHTML = `
-          <h3>${app.doctor} (${app.specialty})</h3>
-          <p><strong>Date:</strong> ${app.date}</p>
-          <p><strong>Time:</strong> ${app.time}</p>
-          <p><strong>Status:</strong> ${app.status}</p>
-          ${app.status === "Scheduled" ? `
-            <button class="cancel-btn" data-index="${index}">Cancel</button>
-            <button class="reschedule-btn" data-index="${index}">Reschedule</button>
-          ` : ""}
-        `;
-  
-        container.appendChild(card);
+    })
+      .then(res => res.json())
+      .then(data => {
+        appointments = data;
+        renderAppointments(false); // Default: show upcoming
+      })
+      .catch(() => {
+        container.innerHTML = "<p>Error loading appointments.</p>";
       });
+  }
+
+  function isUpcoming(dateStr) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const appDate = new Date(dateStr);
+    return appDate >= today;
+  }
+
+  function renderAppointments(showHistory = false) {
+    container.innerHTML = "";
+
+    const filtered = appointments.filter(app =>
+      showHistory ? !isUpcoming(app.appointment_date) : isUpcoming(app.appointment_date)
+    );
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<p>No ${showHistory ? "past" : "upcoming"} appointments.</p>`;
+      return;
     }
-  
-    // Open modal
-    document.getElementById("addAppointmentBtn").addEventListener("click", () => {
-      document.getElementById("appointmentModal").style.display = "block";
+
+    filtered.forEach(app => {
+      const card = document.createElement("div");
+      card.classList.add("appointment-card");
+
+      if (app.status === "completed") card.classList.add("completed");
+      else if (app.status === "cancelled") card.classList.add("cancelled");
+
+      card.innerHTML = `
+        <h3>${app.doctor_name || "Unknown"} (${app.specialty || "N/A"})</h3>
+        <p><strong>Date:</strong> ${app.appointment_date}</p>
+        <p><strong>Time:</strong> ${app.appointment_time}</p>
+        <p><strong>Status:</strong> ${app.status}</p>
+      `;
+
+      container.appendChild(card);
     });
-  
-    // Close modal
-    document.getElementById("modalClose").addEventListener("click", () => {
-      document.getElementById("appointmentModal").style.display = "none";
-    });
-  
-    // Add new appointment
-    document.getElementById("newAppointmentForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-  
-      const newAppointment = {
-        doctor: document.getElementById("doctorName").value,
-        specialty: document.getElementById("specialty").value,
-        date: document.getElementById("appointmentDate").value,
-        time: document.getElementById("appointmentTime").value,
-        status: "Scheduled"
-      };
-  
-      appointments.push(newAppointment);
-      renderAppointments();
-      e.target.reset();
-      document.getElementById("appointmentModal").style.display = "none";
-    });
-  
-    // Cancel and Reschedule
-    container.addEventListener("click", (e) => {
-      const index = e.target.dataset.index;
-      if (e.target.classList.contains("cancel-btn")) {
-        appointments[index].status = "Cancelled";
-        renderAppointments();
-      } else if (e.target.classList.contains("reschedule-btn")) {
-        const newDate = prompt("Enter new date (YYYY-MM-DD):", appointments[index].date);
-        const newTime = prompt("Enter new time (HH:MM):", appointments[index].time);
-        if (newDate && newTime) {
-          appointments[index].date = newDate;
-          appointments[index].time = newTime;
-          appointments[index].status = "Scheduled";
-          renderAppointments();
-        }
+  }
+
+  // Doctor search suggestions
+  function loadDoctors() {
+    secureFetch("/api/doctors/search", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
       }
-    });
-  
-    renderAppointments();
+    })
+      .then(res => res.json())
+      .then(doctors => {
+        const list = document.getElementById("doctorList");
+        doctors.forEach(doc => {
+          const option = document.createElement("option");
+          option.value = doc.name;
+          option.dataset.specialty = doc.specialty;
+          list.appendChild(option);
+        });
+
+        doctorInput.addEventListener("input", () => {
+          const selected = [...list.options].find(opt => opt.value === doctorInput.value);
+          specialtyInput.value = selected?.dataset.specialty || "";
+        });
+      });
+  }
+
+  // View toggle buttons
+  upcomingBtn.addEventListener("click", () => {
+    renderAppointments(false);
+    upcomingBtn.classList.add("active");
+    historyBtn.classList.remove("active");
   });
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebarToggle');
-  
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-  });  
+
+  historyBtn.addEventListener("click", () => {
+    renderAppointments(true);
+    historyBtn.classList.add("active");
+    upcomingBtn.classList.remove("active");
+  });
+
+  // Add appointment modal
+  document.getElementById("addAppointmentBtn").addEventListener("click", () => {
+    document.getElementById("appointmentModal").style.display = "block";
+  });
+
+  document.getElementById("modalClose").addEventListener("click", () => {
+    document.getElementById("appointmentModal").style.display = "none";
+  });
+
+  document.getElementById("newAppointmentForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const doctor = doctorInput.value;
+    const specialty = specialtyInput.value;
+    const date = document.getElementById("appointmentDate").value;
+    const time = document.getElementById("appointmentTime").value;
+
+    if (!doctor || !specialty) return alert("Select a valid doctor.");
+
+    const body = {
+      doctor_name: doctor,
+      specialty,
+      appointment_date: date,
+      appointment_time: time
+    };
+
+    secureFetch("/api/appointments/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify(body)
+    })
+      .then(res => res.json())
+      .then(() => {
+        alert("Appointment added.");
+        document.getElementById("appointmentModal").style.display = "none";
+        e.target.reset();
+        fetchAppointments();
+      })
+      .catch(() => alert("Failed to add appointment."));
+  });
+
+  // Sidebar toggle
+  document.getElementById("sidebarToggle").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("collapsed");
+  });
+
+  // Load initial data
+  fetchAppointments();
+  loadDoctors();
+});

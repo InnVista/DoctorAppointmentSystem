@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("accessToken", data.access);
             localStorage.setItem("refreshToken", data.refresh);
             localStorage.setItem("userRole", data.role);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
 
             alert("Login successful!");
             

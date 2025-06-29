@@ -24,6 +24,7 @@ def custom_serve(request, path):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
+    path('api/appointments/', include('appointments.urls')),
 
     # Serve root as index.html using custom_serve
     re_path(r'^$', lambda req: custom_serve(req, 'index.html')),

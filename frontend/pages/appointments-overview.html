@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doctor - Appointments Overview</title>
   <link rel="stylesheet" href="../css/dashboard.css">
   <link rel="stylesheet" href="../css/styles.css">
-  <script src="../js/auth.js"></script> 
+  <script src="../js/auth.js"></script>
   <script src="../js/appointments-overview.js" defer></script>
 </head>
+
 <body>
   <!-- Header -->
   <header>
@@ -19,7 +21,7 @@
       <ul>
         <li><a href="appointments-overview.html">Appointments Overview</a></li>
         <li><a href="doctor-patients.html">Patient Records</a></li>
-        
+
         <li><a href="login.html">Logout</a></li>
       </ul>
     </nav>
@@ -51,6 +53,12 @@
           </tr>
         </thead>
         <tbody id="appointmentsBody">
+          <div class="form-group" style="position: relative; max-width: 400px;">
+            <label for="patientSearch">Search Patient</label>
+            <input type="text" id="patientSearch" placeholder="Start typing patient name or email..."
+              autocomplete="off" />
+            <ul id="suggestionList" class="suggestions"></ul>
+          </div>
           <!-- Appointments will be dynamically inserted here -->
         </tbody>
       </table>
@@ -62,4 +70,5 @@
     <div>© 2025 Doctor Appointment Management System</div>
   </footer>
 </body>
+
 </html>

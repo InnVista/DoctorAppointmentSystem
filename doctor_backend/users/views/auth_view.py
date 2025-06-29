@@ -5,6 +5,7 @@ from ..serializers.register_serializer import RegisterSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from ..models import CustomUser
+from ..serializers.doctor_serializer import DoctorSerializer
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -60,11 +61,13 @@ class LoginView(APIView):
             if not user.is_active:
                 return Response({"message": "Please verify your email before logging in."}, status=403)
             refresh = RefreshToken.for_user(user)
+            outputdat=DoctorSerializer(user)
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
                 "role": user.role,
-                "message": "Login successful"
+                "message": "Login successful",
+                "user":outputdat.data
             })
         return Response({"message": "Invalid credentials."}, status=401)
 

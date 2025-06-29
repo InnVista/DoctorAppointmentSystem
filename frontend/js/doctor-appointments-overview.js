@@ -1,252 +1,287 @@
-// doctor-appointments-overview.js
+let allAppointments = [];
+let currentTab = 'today';
+let appointmentToCancel = null;
+let appointmentToReschedule = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-    switchTab('today');
-    renderAppointments(todayAppointments);
-  });
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = 'flex';
+}
 
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
+
+function setupSidebar() {
   const sidebar = document.getElementById('sidebar');
   const toggleBtn = document.getElementById('sidebarToggle');
-
   toggleBtn.addEventListener('click', () => {
     sidebar.classList.toggle('collapsed');
   });
-  
-  // Mock Appointments Data
-  const upcomingAppointments = [
-    { patient: "John Doe", date: "2025-04-30", time: "10:00 AM", status: "Upcoming" },
-    { patient: "Jane Smith", date: "2025-05-01", time: "2:00 PM", status: "Upcoming" },
-  ];
-  const todayAppointments = [
-    { patient: "John Doe", date: "2025-04-30", time: "10:00 AM", status: "Arrived" },
-    { patient: "Jane Smith", date: "2025-05-01", time: "2:00 PM", status: "Arrived" },
-  ];
-  const historyAppointments = [
-    { patient: "Michael Brown", date: "2025-04-25", time: "11:00 AM", status: "Completed" },
-    { patient: "Emily White", date: "2025-04-26", time: "3:00 PM", status: "Completed" },
-  ];
-  
-  const appointmentsBody = document.getElementById('appointmentsBody');
-  const todayTab = document.getElementById('todayTab');
-  const upcomingTab = document.getElementById('upcomingTab');
-  const historyTab = document.getElementById('historyTab');
-  
-  let currentTab = 'today';
-  
-  function switchTab(tab) {
-    console.log(tab)
-    if(tab!=null)
-        currentTab = tab;
-    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.tab-button[data-tab="${tab}"]`)?.classList.add('active');
-  
-    if (tab === 'today') {
-      renderAppointments(todayAppointments);
-    } else if (tab === 'upcoming') {
-      renderAppointments(upcomingAppointments);
-    } else if (tab === 'history') {
-      renderAppointments(historyAppointments);
-    }
-  }
-  
-  todayTab.addEventListener('click', () => switchTab('today'));
-  upcomingTab.addEventListener('click', () => switchTab('upcoming'));
-  historyTab.addEventListener('click', () => switchTab('history'));
-  
-  function renderAppointments(data) {
-    appointmentsBody.innerHTML = '';
-    data.forEach((appointment, index) => {
-      const row = `
-        <tr>
-          <td>${appointment.patient}</td>
-          <td>${appointment.date}</td>
-          <td>${appointment.time}</td>
-          <td><span class="status">${appointment.status}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewAppointment(${index})">View</button>
-            <button class="action-btn" onclick="rescheduleAppointment(${index})">Reschedule</button>
-            <button class="action-btn" onclick="cancelAppointment(${index})">Cancel</button>
-          </td>
-        </tr>
-      `;
-      appointmentsBody.innerHTML += row;
-    });
-  }
-  
-  // View function
-  function viewAppointment(index) {
-    let selectedAppointment;
-    if (currentTab === 'today') {
-      selectedAppointment = todayAppointments[index];
-    } else if (currentTab === 'upcoming') {
-      selectedAppointment = upcomingAppointments[index];
-    } else if (currentTab === 'history') {
-      selectedAppointment = historyAppointments[index];
-    }
-  
-    // Store appointment data in localStorage
-    localStorage.setItem('selectedAppointment', JSON.stringify(selectedAppointment));
-    localStorage.setItem('appointmentTab', currentTab); // Optional, if needed on the view page
-  
-    // Navigate to appointment-view.html
-    window.location.href = 'appointment-view.html';
-  }
-  
-  
-
-  
-  let appointmentToCancel = null;
-  
-  function cancelAppointment(index) {
-    appointmentToCancel = index;
-    document.getElementById('cancelModal').style.display = 'flex';
-  }
-  
-  document.getElementById('confirmCancelBtn').addEventListener('click', function() {
-    if (appointmentToCancel !== null) {
-      if (currentTab === 'today') {
-        todayAppointments[appointmentToCancel].status = "Cancelled";
-        renderAppointments(todayAppointments);
-      } else if (currentTab === 'upcoming') {
-        upcomingAppointments[appointmentToCancel].status = "Cancelled";
-        renderAppointments(upcomingAppointments);
-      } else if (currentTab === 'history') {
-        historyAppointments[appointmentToCancel].status = "Cancelled";
-        renderAppointments(historyAppointments);
-      }
-      appointmentToCancel = null;
-      document.getElementById('cancelModal').style.display = 'none';
-    }
-  });
-  
-  document.getElementById('closeModalBtn').addEventListener('click', function() {
-    appointmentToCancel = null;
-    document.getElementById('cancelModal').style.display = 'none';
-  });
-  
-  document.getElementById('newAppointmentBtn').addEventListener('click', () => {
-    document.getElementById('newAppointmentModal').style.display = 'flex';
-  });
-  
-  document.getElementById('closeAppointmentModal').addEventListener('click', closeNewAppointmentModal);
-  document.getElementById('closeAppointmentModalBtn').addEventListener('click', closeNewAppointmentModal);
-  
-  function closeNewAppointmentModal() {
-    document.getElementById('newAppointmentModal').style.display = 'none';
-    document.getElementById('appointmentForm').reset();
-    document.getElementById('formError').style.display = 'none';
-  }
-  
-  document.getElementById('appointmentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const name = document.getElementById('patientName').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const date = document.getElementById('appointmentDate').value;
-    const time = document.getElementById('appointmentTime').value;
-    const errorBox = document.getElementById('formError');
-  
-    if (!name || !phone || !date || !time) {
-      errorBox.innerText = "Please fill in all required fields.";
-      errorBox.style.display = 'block';
-      return;
-    }
-  
-    if (!/^\d{10}$/.test(phone)) {
-      errorBox.innerText = "Please enter a valid 10-digit phone number.";
-      errorBox.style.display = 'block';
-      return;
-    }
-  
-    // Create and store new appointment
-    const newAppointment = {
-      patient: name,
-      date: date,
-      time: time,
-      status: "Upcoming",
-    };
-  
-    upcomingAppointments.push(newAppointment);
-  
-    if (currentTab === 'upcoming') {
-      renderAppointments(upcomingAppointments);
-    }
-  
-    alert(`Appointment booked successfully for ${name} on ${date} at ${time}.`);
-  
-    closeNewAppointmentModal();
-  });
-  
-  
-  
-  let appointmentToReschedule = null;
-
-function rescheduleAppointment(index) {
-  appointmentToReschedule = index;
-  // Open the reschedule modal
-  document.getElementById('rescheduleModal').style.display = 'flex';
 }
 
-document.getElementById('confirmRescheduleBtn').addEventListener('click', function () {
-  if (appointmentToReschedule !== null) {
+function fetchAppointments() {
+  secureFetch("/api/appointments/", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
+    .then((data) => {
+      allAppointments = data;
+      switchTab(currentTab);
+    })
+    .catch((err) => {
+      console.error("Error fetching appointments", err);
+      document.getElementById('appointmentsBody').innerHTML =
+        `<tr><td colspan="5" style="text-align:center; color:red;">Could not load appointments. Please try again later.</td></tr>`;
+    });
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.tab-button[data-tab="${tab}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  const todayDate = new Date().toISOString().split("T")[0];
+  let filtered = [];
+
+  if (tab === 'today') {
+    filtered = allAppointments.filter(app => app.appointment_date === todayDate);
+  } else if (tab === 'upcoming') {
+    filtered = allAppointments.filter(app => app.appointment_date > todayDate && app.status !== "cancelled");
+  } else if (tab === 'history') {
+    filtered = allAppointments.filter(app => app.status === "completed" || app.status === "cancelled"||app.appointment_date<todayDate);
+  }
+
+  renderAppointments(filtered);
+}
+
+function renderAppointments(data) {
+  const appointmentsBody = document.getElementById('appointmentsBody');
+  if (data.length === 0) {
+    appointmentsBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No appointments available.</td></tr>`;
+    return;
+  }
+
+  appointmentsBody.innerHTML = data.map(appointment => `
+    <tr>
+      <td>${appointment.patient_name || "Unknown"}</td>
+      <td>${appointment.appointment_date}</td>
+      <td>${appointment.appointment_time}</td>
+      <td><span class="status">${appointment.status}</span></td>
+      <td>
+        <button class="action-btn view-btn" data-id="${appointment.id}">View</button>
+        ${appointment.status !== "completed" && appointment.status !== "cancelled" ? `
+          <button class="action-btn reschedule-btn" data-id="${appointment.id}">Reschedule</button>
+          <button class="action-btn cancel-btn" data-id="${appointment.id}">Cancel</button>
+        ` : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function setupTabListeners() {
+  document.getElementById('todayTab').addEventListener('click', () => switchTab('today'));
+  document.getElementById('upcomingTab').addEventListener('click', () => switchTab('upcoming'));
+  document.getElementById('historyTab').addEventListener('click', () => switchTab('history'));
+}
+function viewAppointment(id) {
+  const appointment = allAppointments.find(app => app.id === id);
+  localStorage.setItem('selectedAppointment', JSON.stringify(appointment));
+  localStorage.setItem('appointmentTab', currentTab);
+  window.location.href = `appointment-view.html?id=${id}`;
+}
+
+function openCancel(id) {
+  appointmentToCancel = id;
+  openModal('cancelModal');
+}
+
+function openReschedule(id) {
+  appointmentToReschedule = id;
+  openModal('rescheduleModal');
+}
+
+function setupModalHandlers() {
+  document.getElementById('appointmentsBody').addEventListener('click', (e) => {
+    const target = e.target;
+    if (target.tagName !== 'BUTTON' || !target.dataset.id) return;
+    const appointmentId = parseInt(target.dataset.id);
+    if (target.classList.contains('view-btn')) viewAppointment(appointmentId);
+    else if (target.classList.contains('reschedule-btn')) openReschedule(appointmentId);
+    else if (target.classList.contains('cancel-btn')) openCancel(appointmentId);
+  });
+
+  document.getElementById('confirmCancelBtn').addEventListener('click', () => {
+    if (appointmentToCancel !== null) {
+      secureFetch(`/api/appointments/${appointmentToCancel}/cancel/`, {
+        method: "POST",
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
+        .then(res => res.json())
+        .then(() => {
+          fetchAppointments();
+          closeModal('cancelModal');
+          appointmentToCancel = null;
+        });
+    }
+  });
+
+  document.getElementById('closeModalBtn').addEventListener('click', () => {
+    appointmentToCancel = null;
+    closeModal('cancelModal');
+  });
+
+  document.getElementById('confirmRescheduleBtn').addEventListener('click', () => {
     const newDate = document.getElementById('newDate').value;
     const newTime = document.getElementById('newTime').value;
     const alertBox = document.getElementById('rescheduleAlert');
 
     if (newDate && newTime) {
-      // Hide alert if previously shown
       alertBox.style.display = 'none';
-
-      const updatedAppointment = {
-        ...getCurrentAppointments()[appointmentToReschedule],
-        date: newDate,
-        time: newTime,
-      };
-
-      // Update the correct list
-      if (currentTab === 'today') {
-        todayAppointments[appointmentToReschedule] = updatedAppointment;
-        renderAppointments(todayAppointments);
-      } else if (currentTab === 'upcoming') {
-        upcomingAppointments[appointmentToReschedule] = updatedAppointment;
-        renderAppointments(upcomingAppointments);
-      } else if (currentTab === 'history') {
-        historyAppointments[appointmentToReschedule] = updatedAppointment;
-        renderAppointments(historyAppointments);
-      }
-
-      // Close modal
-      document.getElementById('rescheduleModal').style.display = 'none';
-      appointmentToReschedule = null;
+      secureFetch(`/api/appointments/${appointmentToReschedule}/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          appointment_date: newDate,
+          appointment_time: newTime,
+          status: "scheduled"
+        }),
+      })
+        .then(res => res.json())
+        .then(() => {
+          fetchAppointments();
+          closeModal('rescheduleModal');
+          appointmentToReschedule = null;
+        });
     } else {
       alertBox.style.display = 'block';
       alertBox.textContent = 'Please select both date and time.';
     }
+  });
+
+  document.getElementById('closeRescheduleModalBtn').addEventListener('click', () => {
+    appointmentToReschedule = null;
+    closeModal('rescheduleModal');
+  });
+
+  document.getElementById('newAppointmentBtn').addEventListener('click', () => {
+    openModal('newAppointmentModal');
+  });
+
+  function closeNewAppointmentModal() {
+    closeModal('newAppointmentModal');
+    document.getElementById('appointmentForm').reset();
+    document.getElementById('formError').style.display = 'none';
   }
-});
 
+  document.getElementById('closeAppointmentModal').addEventListener('click', closeNewAppointmentModal);
+  document.getElementById('closeAppointmentModalBtn').addEventListener('click', closeNewAppointmentModal);
 
-document.getElementById('closeRescheduleModalBtn').addEventListener('click', function() {
-  appointmentToReschedule = null;
-  document.getElementById('rescheduleModal').style.display = 'none';
-});
-document.addEventListener("DOMContentLoaded", function () {
-  const openModal = (id) => document.getElementById(id).style.display = 'flex';
-  const closeModal = (id) => document.getElementById(id).style.display = 'none';
+  document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = document.getElementById('patientName').value.trim();
+    const patientId = document.getElementById('patientId').value;
+    const phone = document.getElementById('phone').value;
+    const date = document.getElementById('appointmentDate').value;
+    const time = document.getElementById('appointmentTime').value;
+    const notes = document.getElementById('notes').value;
+    const errorBox = document.getElementById('formError');
+    const doctor = JSON.parse(localStorage.getItem("user"))?.id;
 
-  // Open buttons
-  document.getElementById('rescheduleBtn').addEventListener('click', () => openModal('rescheduleModal'));
-  document.getElementById('cancelBtn').addEventListener('click', () => openModal('cancelModal'));
-  document.getElementById('statusBtn').addEventListener('click', () => openModal('statusModal'));
+    if (!name || !date || !time || !phone || !doctor || !patientId) {
+      errorBox.innerText = "Please fill in all required fields correctly.";
+      errorBox.style.display = 'block';
+      return;
+    }
 
-  // Close icons
-  document.querySelectorAll('.close').forEach(btn => {
-    btn.addEventListener('click', () => closeModal(btn.dataset.close));
+    const payload = {
+      patient: patientId,
+      doctor,
+      phone,
+      appointment_date: date,
+      appointment_time: time,
+      reason: notes
+    };
+
+    secureFetch("/api/appointments/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(err => Promise.reject(err));
+        return res.json();
+      })
+      .then(() => {
+        alert(`Appointment booked successfully for ${name} on ${date} at ${time}.`);
+        closeNewAppointmentModal();
+        fetchAppointments();
+      })
+      .catch(err => {
+        console.error(err);
+        errorBox.innerText = "Failed to create appointment. Please check your input.";
+        errorBox.style.display = 'block';
+      });
   });
 
-  // Close when clicking outside the modal content
-  window.addEventListener('click', function (e) {
-    document.querySelectorAll('.modal').forEach(modal => {
-      if (e.target === modal) modal.style.display = 'none';
-    });
+  // Autocomplete
+  const patientInput = document.getElementById('patientName');
+  const suggestionsList = document.getElementById('patientSuggestions');
+
+  patientInput.addEventListener('input', () => {
+    const query = patientInput.value.trim();
+    if (query.length < 2) {
+      suggestionsList.innerHTML = '';
+      return;
+    }
+
+    secureFetch(`/api/patients/?search=${query}`, {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+    })
+      .then(res => res.json())
+      .then(data => {
+        const results = data.results;
+        if (!Array.isArray(results)) {
+          console.error("Expected results array, got:", results);
+          return;
+        }
+
+        suggestionsList.innerHTML = '';
+        results.forEach(patient => {
+          const li = document.createElement('li');
+          li.textContent = `${patient.first_name} ${patient.last_name}`.trim();
+          li.addEventListener('click', () => {
+            patientInput.value = `${patient.first_name} ${patient.last_name}`.trim();
+            document.getElementById('patientId').value = patient.id;
+            suggestionsList.innerHTML = '';
+          });
+          suggestionsList.appendChild(li);
+        });
+      })
+      .catch(err => console.error('Patient search failed:', err));
   });
+
+  document.addEventListener('click', (e) => {
+    if (!patientInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+      suggestionsList.innerHTML = '';
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupSidebar();
+  setupTabListeners();
+  setupModalHandlers();
+  fetchAppointments();
 });
