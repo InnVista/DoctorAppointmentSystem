@@ -7,6 +7,9 @@ from .serializers import AppointmentSerializer
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from collections import defaultdict
+from calendar import month_name
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AppointmentListCreateView(APIView):
@@ -132,3 +135,41 @@ class AppointmentNotesView(APIView):
         appointment.notes = notes
         appointment.save()
         return Response({"message": "Notes saved successfully."})
+
+class AppointmentStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        today = now().date()
+
+        # Filter by role
+        if user.role == 'patient':
+            queryset = Appointment.objects.filter(patient=user)
+        elif user.role == 'doctor':
+            queryset = Appointment.objects.filter(doctor=user)
+        else:
+            queryset = Appointment.objects.all()
+
+        # 1. Count of upcoming
+        upcoming = queryset.filter(appointment_date__gte=today, status__in=["scheduled", "confirmed"]).count()
+
+        # 2. Last visit (completed appointments)
+        last_visit_obj = queryset.filter(status="completed").order_by('-appointment_date').first()
+        last_visit = last_visit_obj.appointment_date.strftime('%d %B %Y') if last_visit_obj else "N/A"
+
+        # 3. Monthly stats
+        monthly = defaultdict(int)
+        for appt in queryset:
+            key = appt.appointment_date.strftime('%b')
+            monthly[key] += 1
+
+        # Sorted by month order (Jan, Feb, ...)
+        ordered_months = [month_name[i][:3] for i in range(1, 13)]
+        monthly_data = [{"month": m, "count": monthly[m]} for m in ordered_months if monthly[m] > 0]
+
+        return Response({
+            "upcoming": upcoming,
+            "lastVisit": last_visit,
+            "monthlyHistory": monthly_data
+        })

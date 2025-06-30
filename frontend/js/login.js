@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
-
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
@@ -25,10 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("refreshToken", data.refresh);
             localStorage.setItem("userRole", data.role);
             localStorage.setItem("user", JSON.stringify(data.user));
-
-
-            alert("Login successful!");
-            
             if (data.role === "admin") {
                 window.location.href = "admin-dashboard.html";
             } else if (data.role === "doctor") {
@@ -37,7 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.href = "patient-dashboard.html";
             }
         } else {
-            alert(data.message || "Login failed. Check your credentials.");
+            showFlashMessage(data.message || "Login failed. Check your credentials.");
+
         }
     });
 });

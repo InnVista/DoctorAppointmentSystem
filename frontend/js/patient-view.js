@@ -3,18 +3,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const patientId = urlParams.get('id');
 
   if (!patientId) {
-    alert('Patient ID not found in URL');
+    notification.error('Patient ID not found in URL');
     return;
   }
 
   try {
     const response = await secureFetch(`/api/patients/${patientId}/`);
-    if (!response.ok) throw new Error('Failed to fetch patient details');
+    if (!response.ok) 
+      notification.error(error);
 
     const data = await response.json();
     populateForm(data);
   } catch (err) {
-    alert(err.message);
+    notification.error(err.message);
   }
 });
 
@@ -69,14 +70,15 @@ document.getElementById('patientViewForm').addEventListener('submit', async (e) 
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Update failed');
+      // throw new Error(error.detail || 'Update failed');
+      notification.error(error);
     }
 
-    alert('Patient updated successfully!');
+    notification.success('Patient updated successfully!');
     document.querySelectorAll('#patientViewForm input, #patientViewForm textarea, #patientViewForm select').forEach(field => field.disabled = true);
     document.getElementById('saveBtn').style.display = 'none';
     document.getElementById('editBtn').style.display = 'inline-block';
   } catch (err) {
-    alert(err.message);
+    notification.error(err.message);
   }
 });

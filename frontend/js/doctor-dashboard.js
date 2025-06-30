@@ -1,128 +1,125 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar Toggle functionality
-    const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebarToggle');
+const API_BASE = "http://localhost:8000/api";
+const accessToken = localStorage.getItem("accessToken");
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-  });
-  
-    // Daily Appointments Trend
-    const dailyAppointmentsCtx = document.getElementById('dailyAppointmentsChart').getContext('2d');
-    new Chart(dailyAppointmentsCtx, {
-      type: 'line',
-      data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        datasets: [{
-          label: 'Appointments',
-          data: [5, 7, 8, 6, 9, 4],
-          fill: true,
-          borderColor: '#0077cc',
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Daily Appointments'
-          }
-        }
-      }
-    });
-  
-    // Top Diagnosed Diseases
-    const diagnosedCasesCtx = document.getElementById('diagnosedCasesChart').getContext('2d');
-    new Chart(diagnosedCasesCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Flu', 'Fever', 'Diabetes', 'Allergy', 'Fracture'],
-        datasets: [{
-          label: 'Cases',
-          data: [15, 10, 8, 6, 4],
-          backgroundColor: ['#4CAF50', '#ff9900', '#66ccff', '#ff6666', '#9966cc']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Top Diagnosed Diseases'
-          }
-        }
-      }
-    });
-  
-    // Patient Age Groups
-    const patientAgeCtx = document.getElementById('patientAgeChart').getContext('2d');
-    new Chart(patientAgeCtx, {
-      type: 'pie',
-      data: {
-        labels: ['0-18', '19-30', '31-45', '46-60', '60+'],
-        datasets: [{
-          label: 'Age Groups',
-          data: [10, 30, 25, 20, 15],
-          backgroundColor: ['#0077cc', '#ff9900', '#66cc66', '#cc6699', '#ff6666']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Patient Age Group Distribution'
-          }
-        }
-      }
-    });
-  
-    // Average Consultation Time
-    const consultationTimeCtx = document.getElementById('consultationTimeChart').getContext('2d');
-    new Chart(consultationTimeCtx, {
-      type: 'line',
-      data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        datasets: [{
-          label: 'Minutes',
-          data: [18, 20, 22, 19, 21, 17],
-          fill: false,
-          borderColor: '#cc6699',
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Average Consultation Time'
-          }
-        }
-      }
-    });
+document.addEventListener("DOMContentLoaded", async () => {
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("sidebarToggle");
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
   });
 
-  function loadComponent(id, filePath) {
-    fetch(filePath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to load ${filePath}: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then(data => {
-        document.getElementById(id).innerHTML = data;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  await loadDashboardData();
+});
+
+async function loadDashboardData() {
+  try {
+    const res = await secureFetch(`${API_BASE}/appointments/`);
+    const appointments = await res.json();
+
+    const today = new Date().toISOString().split("T")[0];
+
+    let todaysCount = 0;
+    let patientSet = new Set();
+    let totalDuration = 0;
+    let completedCount = 0;
+
+    // Initialize daily stats
+    const dailyAppointments = [0, 0, 0, 0, 0, 0, 0]; // Sun-Sat
+    const dailyDurations = [0, 0, 0, 0, 0, 0, 0];
+    const dailyCounts = [0, 0, 0, 0, 0, 0, 0];
+
+    appointments.forEach(app => {
+      const dateObj = new Date(app.appointment_date);
+      const weekday = dateObj.getDay(); // 0: Sunday, 6: Saturday
+
+      // Today
+      if (app.appointment_date === today) {
+        todaysCount++;
+      }
+
+      // Unique patients
+      patientSet.add(app.patient);
+
+      // Only for completed appointments
+      if (app.status === "completed" && app.duration_minutes) {
+        totalDuration += app.duration_minutes;
+        completedCount++;
+        dailyDurations[weekday] += app.duration_minutes;
+        dailyCounts[weekday]++;
+      }
+
+      // Count all scheduled/confirmed/completed for chart
+      if (["scheduled", "confirmed", "completed"].includes(app.status)) {
+        dailyAppointments[weekday]++;
+      }
+    });
+
+    // Set Stats
+    document.getElementById("todaysAppointments").textContent = todaysCount;
+    document.getElementById("totalPatients").textContent = patientSet.size;
+    document.getElementById("avgConsultTime").textContent =
+      completedCount > 0 ? `${Math.round(totalDuration / completedCount)} mins` : "0 mins";
+
+    drawCharts(dailyAppointments, dailyDurations, dailyCounts);
+  } catch (err) {
+    console.error("Error loading doctor dashboard:", err);
   }
-  
-  document.addEventListener("DOMContentLoaded", () => {
-    // loadComponent("header-placeholder", "../pages/doctor/doctor-header.html");
-    // loadComponent("sidebar-placeholder", "../pages/doctor/sidebar.html");
-    // loadComponent("footer-placeholder", "../pages/doctor/footer.html");
+}
+
+function drawCharts(dailyAppointments, dailyDurations, dailyCounts) {
+  const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Appointments Line Chart
+  const dailyApptCtx = document.getElementById('dailyAppointmentsChart').getContext('2d');
+  new Chart(dailyApptCtx, {
+    type: 'line',
+    data: {
+      labels: dayLabels,
+      datasets: [{
+        label: 'Appointments',
+        data: dailyAppointments,
+        fill: true,
+        borderColor: '#0077cc',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Daily Appointments (This Week)'
+        }
+      }
+    }
   });
-  
+
+  // Average Consultation Time Line Chart
+  const consultTimeCtx = document.getElementById('consultationTimeChart').getContext('2d');
+  const avgDurations = dailyDurations.map((total, i) =>
+    dailyCounts[i] > 0 ? parseFloat((total / dailyCounts[i]).toFixed(1)) : 0
+  );
+
+  new Chart(consultTimeCtx, {
+    type: 'line',
+    data: {
+      labels: dayLabels,
+      datasets: [{
+        label: 'Avg Time (mins)',
+        data: avgDurations,
+        fill: false,
+        borderColor: '#cc6699',
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Average Consultation Time (This Week)'
+        }
+      }
+    }
+  });
+}

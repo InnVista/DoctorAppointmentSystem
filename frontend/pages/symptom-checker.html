@@ -40,20 +40,23 @@
   
 
         <main class="container">
+            
             <form id="symptomForm">
-                <h2>Select your symptoms:</h2>
-                <div class="symptom-grid">
-                    <label><input type="checkbox" value="fever"> Fever</label>
-                    <label><input type="checkbox" value="cough"> Cough</label>
-                    <label><input type="checkbox" value="headache"> Headache</label>
-                    <label><input type="checkbox" value="nausea"> Nausea</label>
-                    <label><input type="checkbox" value="fatigue"> Fatigue</label>
-                    <label><input type="checkbox" value="shortness of breath"> Shortness of Breath</label>
-                    <label><input type="checkbox" value="chest pain"> Chest Pain</label>
-                    <label><input type="checkbox" value="sore throat"> Sore Throat</label>
-                    <label><input type="checkbox" value="diarrhea"> Diarrhea</label>
-                    <label><input type="checkbox" value="dizziness"> Dizziness</label>
+                <h2>Enter Your Symptoms</h2>
+
+                <!-- Tag Input and Autocomplete -->
+                <div class="symptom-inputs">
+                    <div class="tag-container" id="symptomTags"></div>
+                    <input type="text" id="symptomInput" placeholder="Start typing a symptom..." list="symptomList" />
+                    <datalist id="symptomList"></datalist>
                 </div>
+
+                <!-- Fallback dropdown for selection -->
+                <details>
+                    <summary style="margin-top: 10px;">Browse Symptoms</summary>
+                    <div class="symptom-grid" id="symptomDropdownList"></div>
+                </details>
+
                 <button id="symptom-submit" type="submit">Check</button>
             </form>
 

@@ -1,5 +1,3 @@
-// Appointments per Month
-const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('sidebarToggle');
 
@@ -7,94 +5,158 @@ toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
 });
 
-new Chart(appointmentsCtx, {
-  type: 'bar',
-  data: {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [{
-      label: 'Appointments',
-      data: [30, 50, 40, 60, 80, 90],
-      backgroundColor: '#4CAF50'
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Appointments per Month'
-      }
-    }
-  }
-});
+const API_BASE = "http://localhost:8000/api";
 
-// Doctor Specializations
-const specializationCtx = document.getElementById('specializationChart').getContext('2d');
-new Chart(specializationCtx, {
-  type: 'pie',
-  data: {
-    labels: ['Cardiology', 'Dermatology', 'Pediatrics', 'Orthopedics', 'Psychiatry'],
-    datasets: [{
-      label: 'Specialization Distribution',
-      data: [25, 20, 15, 25, 15],
-      backgroundColor: ['#0077cc', '#ff9900', '#66cc66', '#cc6699', '#ff6666']
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Doctor Specialization Breakdown'
-      }
-    }
-  }
-});
+// Fetch data and initialize dashboard
+async function fetchData() {
+  try {
+    const [doctorsRes, patientsRes, appointmentsRes] = await Promise.all([
+      secureFetch(`${API_BASE}/doctors/`),
+      secureFetch(`${API_BASE}/patients/`),
+      secureFetch(`${API_BASE}/appointments/`)
+    ]);
 
-// Patient Growth
-const patientGrowthCtx = document.getElementById('patientGrowthChart').getContext('2d');
-new Chart(patientGrowthCtx, {
-  type: 'line',
-  data: {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [{
-      label: 'New Patients',
-      data: [10, 15, 20, 25, 35, 40],
-      fill: true,
-      borderColor: '#ff9900',
-      tension: 0.3
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'New Patient Growth'
-      }
-    }
-  }
-});
+    const doctorsData = await doctorsRes.json();
+    const patientsData = await patientsRes.json();
+    const appointmentsData = await appointmentsRes.json();
 
-// Revenue (Dummy)
-const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-new Chart(revenueCtx, {
-  type: 'bar',
-  data: {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [{
-      label: 'Revenue (₹)',
-      data: [20000, 25000, 30000, 35000, 40000, 50000],
-      backgroundColor: '#cc6699'
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Monthly Revenue'
+    const doctors = doctorsData.results || doctorsData;
+    const patients = patientsData.results || patientsData;
+    const appointments = appointmentsData;
+
+    // === Dashboard Counts ===
+    document.getElementById('totalDoctors').textContent = doctors.length;
+    document.getElementById('totalPatients').textContent = patients.length;
+
+    const now = new Date();
+    const appointmentCounts = Array(12).fill(0);
+
+    appointments.forEach(app => {
+      const date = new Date(app.appointment_date);
+      if (date.getFullYear() === now.getFullYear()) {
+        appointmentCounts[date.getMonth()]++;
+      }
+    });
+
+    document.getElementById('appointmentsThisMonth').textContent = appointmentCounts[now.getMonth()];
+
+    drawCharts(doctors, patients, appointmentCounts);
+  } catch (error) {
+    console.error("Dashboard data fetch failed:", error);
+  }
+}
+
+function drawCharts(doctors, patients, monthlyAppointments) {
+  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // === Appointments Chart ===
+  new Chart(document.getElementById('appointmentsChart'), {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [{
+        label: 'Appointments',
+        data: monthlyAppointments,
+        backgroundColor: '#4CAF50'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Appointments per Month'
+        }
       }
     }
-  }
-});
+  });
+
+  // === Revenue Chart ===
+  const revenue = monthlyAppointments.map(count => count * 250);
+  new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [{
+        label: 'Revenue (₹)',
+        data: revenue,
+        backgroundColor: '#cc6699'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Monthly Revenue (₹250 per Appointment)'
+        }
+      }
+    }
+  });
+
+  // === Specialization Pie Chart ===
+  const specializationCount = {};
+  doctors.forEach(doc => {
+    const spec = doc.specialization?.trim() || "Others";
+    specializationCount[spec] = (specializationCount[spec] || 0) + 1;
+  });
+
+  const specLabels = Object.keys(specializationCount);
+  const specValues = Object.values(specializationCount);
+  const specColors = specLabels.map((_, i) => `hsl(${i * 50}, 70%, 60%)`);
+
+  new Chart(document.getElementById('specializationChart'), {
+    type: 'pie',
+    data: {
+      labels: specLabels,
+      datasets: [{
+        label: 'Specializations',
+        data: specValues,
+        backgroundColor: specColors
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Doctor Specialization Breakdown'
+        }
+      }
+    }
+  });
+
+  // === Patient Growth Line Chart ===
+  const patientMonthly = Array(12).fill(0);
+  patients.forEach(p => {
+    const joined = new Date(p.date_joined || p.joining_date);
+    if (!isNaN(joined) && joined.getFullYear() === new Date().getFullYear()) {
+      patientMonthly[joined.getMonth()]++;
+    }
+  });
+
+  new Chart(document.getElementById('patientGrowthChart'), {
+    type: 'line',
+    data: {
+      labels: monthLabels,
+      datasets: [{
+        label: 'New Patients',
+        data: patientMonthly,
+        fill: true,
+        borderColor: '#ff9900',
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'New Patient Growth'
+        }
+      }
+    }
+  });
+}
+
+fetchData();

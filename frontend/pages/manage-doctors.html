@@ -82,12 +82,19 @@
       </div>
     </div>
   </div>
+
+  <!-- Edit Doctor Modal -->
   <div id="editDoctorModal" class="modal-overlay">
     <div class="modal">
       <h3>Edit Doctor Details</h3>
       <input type="text" id="editName" placeholder="Full Name" />
       <input type="email" id="editEmail" placeholder="Email" />
-      <input type="text" id="editSpecialization" placeholder="Specialization" />
+
+      <div class="searchable-dropdown">
+        <input type="text" id="editSpecializationInput" placeholder="Specialization" />
+        <ul id="editSpecializationList" class="dropdown-list"></ul>
+      </div>
+
       <div class="modal-buttons">
         <button class="confirm-btn" id="saveEditBtn">Save</button>
         <button class="cancel-btn" id="cancelEditModalBtn">Cancel</button>
@@ -95,19 +102,27 @@
     </div>
   </div>
 
+  <!-- Add Doctor Modal -->
   <div id="addDoctorModal" class="modal-overlay">
-  <div class="modal">
-    <h3>Add Doctor</h3>
-    <input type="text" id="newDoctorName" placeholder="Full Name" />
-    <input type="email" id="newDoctorEmail" placeholder="Email" />
-    <input type="text" id="newDoctorSpecialization" placeholder="Specialization" />
-    <div class="modal-buttons">
-      <button class="confirm-btn" id="addDoctorConfirmBtn">Add</button>
-      <button class="cancel-btn" id="cancelAddModalBtn">Cancel</button>
+    <div class="modal">
+      <h3>Add Doctor</h3>
+      <input type="text" id="newDoctorName" placeholder="Full Name" />
+      <input type="email" id="newDoctorEmail" placeholder="Email" />
+
+      <div class="searchable-dropdown">
+        <input type="text" id="newDoctorSpecializationInput" placeholder="Specialization" />
+        <ul id="newDoctorSpecializationList" class="dropdown-list"></ul>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="confirm-btn" id="addDoctorConfirmBtn">Add</button>
+        <button class="cancel-btn" id="cancelAddModalBtn">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
-<script src="../js/auth.js"></script> 
-<script src="../js/manage-doctors.js"></script>
+
+  <script src="../js/auth.js"></script> 
+  <script src="../js/manage-doctors.js"></script>
+  <div id="notification" class="notification hidden"></div>
 </body>
 </html>

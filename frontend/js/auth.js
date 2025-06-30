@@ -43,3 +43,34 @@ document.querySelectorAll('a[href$="login.html"]').forEach(btn => {
     localStorage.removeItem("refreshToken");
   });
 });
+function showFlashMessage(message) {
+  const flash = document.getElementById('flash-message');
+  flash.textContent = message;
+  flash.classList.remove('hidden');
+  setTimeout(() => {
+    flash.classList.add('hidden');
+  }, 3000);
+}
+
+(function loadNotificationAssets() {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = '../css/notification.css';
+  document.head.appendChild(link);
+
+  if (!window.Notifier) {
+    const script = document.createElement('script');
+    script.src = 'notification.js';
+    document.body.appendChild(script);
+  }
+  const link1 = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = '../../../css/notification.css';
+  document.head.appendChild(link);
+
+  if (!window.Notifier) {
+    const script = document.createElement('script');
+    script.src = '../../js/notification.js';
+    document.body.appendChild(script);
+  }
+})();

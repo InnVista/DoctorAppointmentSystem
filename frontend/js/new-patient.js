@@ -78,14 +78,16 @@ document.getElementById("newPatientForm").addEventListener("submit", async funct
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || "Failed to add patient.");
+      Notifier.error(response)
+      // const error = await response.json();
+      // throw new Error(error.detail || "Failed to add patient.");
     }
-
-    alert("Patient added successfully!");
-    document.getElementById("newPatientForm").reset();
+    else{
+      Notifier.error("Patient added successfully!");
+      document.getElementById("newPatientForm").reset();
+    }
   } catch (error) {
-    alert("Error: " + error.message);
+    Notifier.error("Error: " + error.message);
   }
 });
 

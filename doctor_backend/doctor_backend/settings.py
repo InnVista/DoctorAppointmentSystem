@@ -138,7 +138,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-INSTALLED_APPS += ['rest_framework', 'users', 'appointments', 'reports',"corsheaders",'django_filters']
+INSTALLED_APPS += ['rest_framework', 'users', 'appointments', 'reports','predictor',"corsheaders",'django_filters']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -173,3 +173,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=30),
 }
+
+PASSWORD_RESET_TIMEOUT = 3600  

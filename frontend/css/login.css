@@ -389,3 +389,12 @@ footer {
         font-size: 16px;
     }
 }
+#flash-message {
+  padding: 10px;
+  color: red;
+  transition: opacity 0.5s ease;
+}
+
+.hidden {
+  display: none;
+}

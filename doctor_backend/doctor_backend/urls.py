@@ -24,10 +24,14 @@ def custom_serve(request, path):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
+    path('api/symptom-check/', include('predictor.urls')),
     path('api/appointments/', include('appointments.urls')),
 
     # Serve root as index.html using custom_serve
     re_path(r'^$', lambda req: custom_serve(req, 'index.html')),
+    re_path(r'^frontend/reset-password\.html$', lambda req: custom_serve(req, 'reset-password.html')),
+
+
 
     # Catch-all route
     re_path(r'^(?P<path>.*)$', custom_serve),

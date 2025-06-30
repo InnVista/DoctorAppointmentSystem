@@ -7,6 +7,7 @@ from users.serializers.doctor_serializer import DoctorSerializer
 from rest_framework.response import Response
 from rest_framework import status as drf_status
 from rest_framework.pagination import PageNumberPagination
+from django.shortcuts import get_object_or_404
 import re
 
 class IsAdminUserRole(IsAuthenticated):
@@ -28,9 +29,8 @@ class DoctorListCreateView(APIView):
                 Q(email__icontains=search_query) |
                 Q(specialization__icontains=search_query)
             )
-
         paginator = PageNumberPagination()
-        paginator.page_size = 10  # Adjust page size as needed
+        paginator.page_size = 10
         result_page = paginator.paginate_queryset(doctors, request)
         serializer = DoctorSerializer(result_page, many=True)
 
@@ -38,6 +38,10 @@ class DoctorListCreateView(APIView):
 
 
     def post(self, request):
+        email = request.data.get("email")
+        doctor = CustomUser.objects.filter(email=email).first()
+        if(doctor):
+            return Response("Email already used", status=400)
         serializer = DoctorSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

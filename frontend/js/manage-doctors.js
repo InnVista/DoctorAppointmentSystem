@@ -1,13 +1,14 @@
 let doctors = [];
 let currentPage = 1;
-const pageSize = 10; // Optional, if your backend supports it
+const pageSize = 10;
 
 const doctorList = document.getElementById("doctorList");
 const searchInput = document.getElementById("searchInput");
 
 const newNameInput = document.getElementById("newDoctorName");
 const newEmailInput = document.getElementById("newDoctorEmail");
-const newSpecInput = document.getElementById("newDoctorSpecialization");
+const newSpecInputField = document.getElementById("newDoctorSpecializationInput");
+const newSpecList = document.getElementById("newDoctorSpecializationList");
 
 const addModal = document.getElementById("addDoctorModal");
 const openAddModalBtn = document.getElementById("openAddModalBtn");
@@ -17,7 +18,8 @@ const cancelAddModalBtn = document.getElementById("cancelAddModalBtn");
 const editModal = document.getElementById("editDoctorModal");
 const editNameInput = document.getElementById("editName");
 const editEmailInput = document.getElementById("editEmail");
-const editSpecInput = document.getElementById("editSpecialization");
+const editSpecInputField = document.getElementById("editSpecializationInput");
+const editSpecList = document.getElementById("editSpecializationList");
 const saveEditBtn = document.getElementById("saveEditBtn");
 const cancelEditBtn = document.getElementById("cancelEditModalBtn");
 
@@ -25,8 +27,52 @@ const prevPageBtn = document.getElementById("prevPageBtn");
 const nextPageBtn = document.getElementById("nextPageBtn");
 const currentPageDisplay = document.getElementById("currentPageDisplay");
 
-
 let editIndex = null;
+
+// Specializations list
+const SPECIALIZATIONS = [
+  "Dermatologist", "General Physician", "Allergist", "Gastroenterologist", "Hepatologist",
+  "Infectious Disease Specialist", "Endocrinologist", "Pulmonologist", "Cardiologist",
+  "Neurologist", "Neurosurgeon", "Pediatrician", "Emergency Medicine Physician",
+  "Vascular Surgeon", "Phlebologist", "Orthopedist", "Rheumatologist", "ENT Specialist",
+  "Urologist", "Proctologist"
+];
+
+function filterAndShowDropdown(inputEl, listEl) {
+  const value = inputEl.value.toLowerCase();
+  listEl.innerHTML = "";
+
+  const filtered = SPECIALIZATIONS.filter(spec => spec.toLowerCase().includes(value));
+  if (filtered.length === 0) {
+    listEl.style.display = "none";
+    return;
+  }
+
+  filtered.forEach(spec => {
+    const li = document.createElement("li");
+    li.textContent = spec;
+    li.onclick = () => {
+      inputEl.value = spec;
+      listEl.style.display = "none";
+    };
+    listEl.appendChild(li);
+  });
+
+  listEl.style.display = "block";
+}
+
+newSpecInputField.addEventListener("input", () =>
+  filterAndShowDropdown(newSpecInputField, newSpecList)
+);
+
+editSpecInputField.addEventListener("input", () =>
+  filterAndShowDropdown(editSpecInputField, editSpecList)
+);
+
+document.addEventListener("click", (e) => {
+  if (!newSpecInputField.contains(e.target)) newSpecList.style.display = "none";
+  if (!editSpecInputField.contains(e.target)) editSpecList.style.display = "none";
+});
 
 async function fetchDoctors(query = "", page = 1) {
   try {
@@ -40,13 +86,13 @@ async function fetchDoctors(query = "", page = 1) {
     currentPage = page;
     currentPageDisplay.textContent = `Page ${currentPage}`;
 
-    // Enable/disable buttons based on API pagination links
     prevPageBtn.disabled = !data.previous;
     nextPageBtn.disabled = !data.next;
   } catch (error) {
-    alert(error.message);
+    showNotification(error.message || "An unexpected error occurred.", "error");
   }
 }
+
 prevPageBtn.addEventListener("click", () => {
   if (currentPage > 1) {
     fetchDoctors(searchInput.value, currentPage - 1);
@@ -57,14 +103,11 @@ nextPageBtn.addEventListener("click", () => {
   fetchDoctors(searchInput.value, currentPage + 1);
 });
 
-// Also update the search input event to reset page and fetch
 searchInput.addEventListener("input", () => {
   currentPage = 1;
   fetchDoctors(searchInput.value, currentPage);
 });
 
-
-// Render doctor list
 function renderDoctors() {
   doctorList.innerHTML = "";
 
@@ -87,7 +130,6 @@ function renderDoctors() {
     `;
   });
 
-  // Re-bind edit buttons
   document.querySelectorAll(".edit-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const index = parseInt(btn.getAttribute("data-index"));
@@ -96,14 +138,13 @@ function renderDoctors() {
   });
 }
 
-// Add doctor
 addDoctorConfirmBtn.onclick = async () => {
   const name = newNameInput.value.trim();
   const email = newEmailInput.value.trim();
-  const specialization = newSpecInput.value.trim();
+  const specialization = newSpecInputField.value.trim();
 
   if (!name || !email || !specialization) {
-    alert("Please fill all fields.");
+    showNotification("Please fill all fields.", "error");
     return;
   }
 
@@ -125,36 +166,39 @@ addDoctorConfirmBtn.onclick = async () => {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || "Failed to add doctor.");
+      console.log(error)
+      console.log(response)
+      if (typeof error === 'string')
+        throw new Error(error || "Failed to add doctor.");
+      message = Object.entries(error)
+        .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(', ') : val}`)
+        .join('\n');
+      throw new Error(message || "Failed to add doctor.");
     }
-
-    alert("Doctor added successfully! Login credentials sent via email.");
+    showNotification("Doctor added successfully! Login credentials sent via email.", "success")
     addModal.style.display = "none";
     newNameInput.value = "";
     newEmailInput.value = "";
-    newSpecInput.value = "";
-
-    fetchDoctors(searchInput.value, currentPage); // Refresh
+    newSpecInputField.value = "";
+    fetchDoctors(searchInput.value, currentPage);
   } catch (error) {
-    alert(error.message);
+    showNotification(error.message || "An unexpected error occurred.", "error");
   }
 };
 
-// Open edit modal
 function openEditModal(index) {
   editIndex = index;
   const doc = doctors[index];
   editNameInput.value = `${doc.first_name} ${doc.last_name || ''}`;
   editEmailInput.value = doc.email;
-  editSpecInput.value = doc.specialization || '';
+  editSpecInputField.value = doc.specialization || '';
   editModal.style.display = "flex";
 }
 
-// Save edits
 saveEditBtn.onclick = async () => {
   let name = editNameInput.value.trim();
   let email = editEmailInput.value.trim();
-  let specialization = editSpecInput.value.trim();
+  let specialization = editSpecInputField.value.trim();
 
   const existingDoctor = doctors[editIndex];
   const id = existingDoctor.id;
@@ -178,20 +222,29 @@ saveEditBtn.onclick = async () => {
       }),
     });
 
-    if (!response.ok) throw new Error('Failed to update doctor');
+    
+    if (!response.ok) {
+      const error = await response.json();
+      console.log(error)
+      console.log(response)
+      if (typeof error === 'string')
+        throw new Error(error || "Failed to update doctor.");
+      message = Object.entries(error)
+        .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(', ') : val}`)
+        .join('\n');
+      throw new Error(message || "Failed to update doctor.");
+    }
     editModal.style.display = "none";
     fetchDoctors(searchInput.value, currentPage);
   } catch (error) {
-    alert(error.message);
+    showNotification(error.message || "An unexpected error occurred.", "error");
   }
 };
 
-// Cancel edit
 cancelEditBtn.onclick = () => {
   editModal.style.display = "none";
 };
 
-// Delete doctor
 async function deleteDoctor(index) {
   const confirmDelete = confirm("Are you sure you want to delete this doctor?");
   if (!confirmDelete) return;
@@ -204,13 +257,12 @@ async function deleteDoctor(index) {
     });
 
     if (!response.ok) throw new Error("Failed to delete doctor.");
-    await fetchDoctors(searchInput.value, currentPage);  // Refresh
+    await fetchDoctors(searchInput.value, currentPage);
   } catch (error) {
-    alert(error.message);
+    showNotification(error.message || "An unexpected error occurred.", "error");
   }
 }
 
-// Toggle status
 async function toggleStatus(index) {
   const doc = doctors[index];
   const id = doc.id;
@@ -225,28 +277,29 @@ async function toggleStatus(index) {
     if (!response.ok) throw new Error("Failed to update status.");
     await fetchDoctors(searchInput.value, currentPage);
   } catch (error) {
-    alert(error.message);
+    showNotification(error.message || "An unexpected error occurred.", "error");
   }
 }
 
-// Search input
-searchInput.addEventListener("input", () => {
-  currentPage = 1;
-  fetchDoctors(searchInput.value, currentPage);
-});
-
-// Modal open/close
 openAddModalBtn.onclick = () => addModal.style.display = "flex";
 cancelAddModalBtn.onclick = () => addModal.style.display = "none";
 
-// Sidebar toggle
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('sidebarToggle');
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
 });
+function showNotification(message, type = "success") {
+  const notification = document.getElementById("notification");
+  notification.textContent = message;
+  notification.className = `notification ${type}`;
+  notification.classList.remove("hidden");
 
-// On page load
+  setTimeout(() => {
+    notification.classList.add("hidden");
+  }, 3000);
+}
+
 window.onload = () => {
-  fetchDoctors(); // load on start
+  fetchDoctors();
 };
