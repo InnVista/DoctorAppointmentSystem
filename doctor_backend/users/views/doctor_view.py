@@ -110,7 +110,7 @@ class DoctorDetailView(APIView):
         doctor = self.get_object(pk)
         data = request.data.copy()  
         email = data.get('email')
-        # Update is_active based on status value
+        
         status_value = data.get('status')
         if status_value is not None:
             if status_value == "Inactive":

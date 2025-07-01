@@ -10,7 +10,7 @@ async function secureFetch(url, options = {}) {
   let response = await fetch(url, options);
 
   if (response.status === 401) {
-    // Token might be expired → try refreshing
+    
     const refreshResponse = await fetch('/api/refresh/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -23,11 +23,10 @@ async function secureFetch(url, options = {}) {
       const data = await refreshResponse.json();
       localStorage.setItem('accessToken', data.access);
 
-      // Retry original request with new token
       options.headers.Authorization = `Bearer ${data.access}`;
       response = await fetch(url, options);
     } else {
-      // Refresh token expired or invalid
+      
       Notifier.error('Session expired. Please login again.');
       localStorage.clear();
       window.location.href = '/pages/login.html';

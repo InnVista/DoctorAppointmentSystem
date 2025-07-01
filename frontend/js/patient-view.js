@@ -31,14 +31,13 @@ function populateForm(patient) {
   document.getElementById('address').value = patient.address || '';
 }
 
-// Toggle edit/save buttons
 document.getElementById('editBtn').addEventListener('click', () => {
   document.querySelectorAll('#patientViewForm input, #patientViewForm textarea, #patientViewForm select').forEach(field => field.disabled = false);
   document.getElementById('saveBtn').style.display = 'inline-block';
   document.getElementById('editBtn').style.display = 'none';
 });
 
-// Submit updated data (optional)
+
 document.getElementById('patientViewForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -70,7 +69,6 @@ document.getElementById('patientViewForm').addEventListener('submit', async (e) 
 
     if (!response.ok) {
       const error = await response.json();
-      // throw new Error(error.detail || 'Update failed');
       notification.error(error);
     }
 

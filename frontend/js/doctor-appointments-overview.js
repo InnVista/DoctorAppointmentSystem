@@ -235,7 +235,6 @@ function setupModalHandlers() {
       });
   });
 
-  // Autocomplete
   const patientInput = document.getElementById('patientName');
   const suggestionsList = document.getElementById('patientSuggestions');
 

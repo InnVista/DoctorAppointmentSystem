@@ -18,32 +18,28 @@ document.getElementById("newPatientForm").addEventListener("submit", async funct
   const gender = document.getElementById("gender").value;
   const emergencyContact = document.getElementById("emergencyContact").value.trim();
 
-  // Validate name
   if (!patientName) {
     document.getElementById("nameError").style.display = "block";
     formValid = false;
   }
 
-  // Validate DOB or Age
   if (!dob && !age) {
     document.getElementById("dobError").style.display = "block";
     formValid = false;
   }
 
-  // Validate phone
   // if (!/^\d{10}$/.test(phone)) {
   //   document.getElementById("phoneError").style.display = "block";
   //   formValid = false;
   // }
 
-  // Validate email
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   if (email && !emailPattern.test(email)) {
     document.getElementById("emailError").style.display = "block";
     formValid = false;
   }
 
-  // Validate emergency contact
+  
   if (emergencyContact && !/^\d{10}$/.test(emergencyContact)) {
     document.getElementById("emergencyContactError").style.display = "block";
     formValid = false;
@@ -51,12 +47,12 @@ document.getElementById("newPatientForm").addEventListener("submit", async funct
 
   if (!formValid) return;
 
-  // Process name
+  
   const [first_name, ...rest] = patientName.split(" ");
   const last_name = rest.join(" ") || "";
   const username = patientName.replace(/\s+/g, '').toLowerCase();
 
-  // Patient payload
+  
   const payload = {
     username,
     email,
@@ -68,7 +64,8 @@ document.getElementById("newPatientForm").addEventListener("submit", async funct
     address,
     gender,
     emergency_contact: emergencyContact,
-    role: "patient", // optional if backend defaults this
+    role: "patient",
+    
   };
 
   try {
@@ -79,8 +76,7 @@ document.getElementById("newPatientForm").addEventListener("submit", async funct
 
     if (!response.ok) {
       Notifier.error(response)
-      // const error = await response.json();
-      // throw new Error(error.detail || "Failed to add patient.");
+      
     }
     else{
       Notifier.error("Patient added successfully!");
@@ -98,9 +94,9 @@ toggleBtn.addEventListener("click", () => {
   sidebar.classList.toggle("collapsed");
 });
 
-// Helper function for secure API fetch
+
 async function secureFetch(url, options = {}) {
-  const token = localStorage.getItem("access_token"); // Adjust if using cookies or session storage
+  const token = localStorage.getItem("access_token"); 
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,

@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchAppointments();
   setupModalHandlers();
   setupNewAppointmentButton();
-  setupPatientSearch(); // 🔍 new suggestion feature
+  setupPatientSearch();
 });
 
-// Fetch appointments from backend
+
 function fetchAppointments() {
   secureFetch("/api/appointments/", {
     headers: {
@@ -20,19 +20,17 @@ function fetchAppointments() {
     .then(res => res.json())
     .then(data => {
       allAppointments = data;
-      switchTab(currentTab); // default to today
+      switchTab(currentTab);
     })
     .catch(err => console.error("Error fetching appointments", err));
 }
 
-// Tab button setup
 function setupTabListeners() {
   document.getElementById('todayTab')?.addEventListener('click', () => switchTab('today'));
   document.getElementById('upcomingTab')?.addEventListener('click', () => switchTab('upcoming'));
   document.getElementById('historyTab')?.addEventListener('click', () => switchTab('history'));
 }
 
-// Switch tabs and filter appointments
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -56,7 +54,6 @@ function switchTab(tab) {
   renderAppointments(filtered);
 }
 
-// Render appointment rows in table
 function renderAppointments(data) {
   const appointmentsBody = document.getElementById('appointmentsBody');
   appointmentsBody.innerHTML = '';
@@ -87,7 +84,6 @@ function renderAppointments(data) {
   });
 }
 
-// View appointment details
 function viewAppointment(id) {
   const appointment = allAppointments.find(app => app.id === id);
   localStorage.setItem('selectedAppointment', JSON.stringify(appointment));
@@ -95,13 +91,11 @@ function viewAppointment(id) {
   window.location.href = 'appointment-view.html';
 }
 
-// Cancel appointment
 function cancelAppointment(id) {
   appointmentToCancel = id;
   document.getElementById('cancelModal').style.display = 'flex';
 }
 
-// Modal button handlers
 function setupModalHandlers() {
   document.getElementById('confirmCancelBtn')?.addEventListener('click', () => {
     if (appointmentToCancel !== null) {
@@ -127,19 +121,16 @@ function setupModalHandlers() {
   });
 }
 
-// Reschedule (dummy placeholder)
 function rescheduleAppointment(id) {
   Notifier.success("Reschedule logic is coming soon");
 }
 
-// Add new appointment modal trigger
 function setupNewAppointmentButton() {
   document.querySelector('.add-appointment')?.addEventListener('click', () => {
     document.getElementById('newAppointmentModal')?.style.display = 'flex';
   });
 }
 
-// ✅ Patient suggestion autocomplete
 function setupPatientSearch() {
   const input = document.getElementById('patientSearch');
   const list = document.getElementById('suggestionList');

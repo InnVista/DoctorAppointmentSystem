@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 let currentPage = 1;
 const pageSize = 10;
 
-// Fetch patients from backend (paginated)
 async function fetchPatients(page = 1) {
   try {
     const response = await secureFetch(`/api/patients/?page=${page}&page_size=${pageSize}`);
@@ -19,7 +18,7 @@ async function fetchPatients(page = 1) {
   }
 }
 
-// Render patient table rows
+
 function renderPatients(patients) {
   const patientsBody = document.getElementById('patientsBody');
   patientsBody.innerHTML = '';
@@ -40,7 +39,7 @@ function renderPatients(patients) {
   });
 }
 
-// Render pagination controls
+
 function setupPagination(totalItems, currentPage) {
   const pagination = document.getElementById('pagination');
   const totalPages = Math.ceil(totalItems / pageSize);
@@ -57,12 +56,12 @@ function setupPagination(totalItems, currentPage) {
   }
 }
 
-// Redirect to new patient page
+
 document.getElementById('addPatientBtn').addEventListener('click', () => {
   window.location.href = '../pages/new-patient.html';
 });
 
-// Sidebar toggle
+
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('sidebarToggle');
 toggleBtn.addEventListener('click', () => {

@@ -12,7 +12,7 @@ const mockReports = [
     // Clear existing reports
     reportGrid.innerHTML = "";
   
-    // Iterate over the mock reports to render them in a grid format
+    
     mockReports.forEach((report) => {
       const reportCard = document.createElement("div");
       reportCard.classList.add("report-card");
@@ -27,12 +27,12 @@ const mockReports = [
       viewReportBtn.textContent = "View Report";
       viewReportBtn.classList.add("view-report");
   
-      // Append elements to the report card
+      
       reportCard.appendChild(reportTitle);
       reportCard.appendChild(reportDescription);
       reportCard.appendChild(viewReportBtn);
   
-      // Append the card to the grid container
+      
       reportGrid.appendChild(reportCard);
     });
   }
@@ -68,7 +68,6 @@ const mockReports = [
     analysisOutput.style.display = "block"; // Show the analysis output
   });
   
-  // Initial render of the reports
   renderReports();
   const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('sidebarToggle');

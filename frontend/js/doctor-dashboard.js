@@ -30,17 +30,15 @@ async function loadDashboardData() {
 
     appointments.forEach(app => {
       const dateObj = new Date(app.appointment_date);
-      const weekday = dateObj.getDay(); // 0: Sunday, 6: Saturday
+      const weekday = dateObj.getDay(); 
 
-      // Today
+      
       if (app.appointment_date === today) {
         todaysCount++;
       }
-
-      // Unique patients
+      
       patientSet.add(app.patient);
 
-      // Only for completed appointments
       if (app.status === "completed" && app.duration_minutes) {
         totalDuration += app.duration_minutes;
         completedCount++;
@@ -48,13 +46,12 @@ async function loadDashboardData() {
         dailyCounts[weekday]++;
       }
 
-      // Count all scheduled/confirmed/completed for chart
       if (["scheduled", "confirmed", "completed"].includes(app.status)) {
         dailyAppointments[weekday]++;
       }
     });
 
-    // Set Stats
+    
     document.getElementById("todaysAppointments").textContent = todaysCount;
     document.getElementById("totalPatients").textContent = patientSet.size;
     document.getElementById("avgConsultTime").textContent =
@@ -69,7 +66,7 @@ async function loadDashboardData() {
 function drawCharts(dailyAppointments, dailyDurations, dailyCounts) {
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  // Appointments Line Chart
+  
   const dailyApptCtx = document.getElementById('dailyAppointmentsChart').getContext('2d');
   new Chart(dailyApptCtx, {
     type: 'line',
@@ -94,7 +91,7 @@ function drawCharts(dailyAppointments, dailyDurations, dailyCounts) {
     }
   });
 
-  // Average Consultation Time Line Chart
+  
   const consultTimeCtx = document.getElementById('consultationTimeChart').getContext('2d');
   const avgDurations = dailyDurations.map((total, i) =>
     dailyCounts[i] > 0 ? parseFloat((total / dailyCounts[i]).toFixed(1)) : 0

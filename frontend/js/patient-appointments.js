@@ -112,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
     historyBtn.classList.toggle("active", showHistory);
   }
 
-  // Pagination
   prevPageBtn.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
@@ -166,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Doctor Suggestions
   function setupDoctorSuggestions() {
     doctorInput.addEventListener("input", () => {
       const query = doctorInput.value.trim();
@@ -215,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Appointment Modal
   document.getElementById("addAppointmentBtn").addEventListener("click", () => {
     document.getElementById("appointmentModal").style.display = "block";
   });
@@ -264,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(() => Notifier.error("Failed to book appointment."));
   });
 
-  // Auto open modal if redirected from search
   const urlParams = new URLSearchParams(window.location.search);
   const redirected = sessionStorage.getItem("redirectedAfterBooking");
   sessionStorage.removeItem("redirectedAfterBooking");

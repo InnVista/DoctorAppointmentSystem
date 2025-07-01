@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Load appointment stats
   secureFetch('/api/appointments/stats/')
     .then(response => {
       if (!response.ok) {
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Render Appointment Chart
 function renderAppointmentChart(monthlyData) {
   const ctx = document.getElementById('appointmentHistoryChart');
   const labels = monthlyData.map(item => item.month);

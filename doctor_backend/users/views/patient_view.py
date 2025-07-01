@@ -6,17 +6,12 @@ from users.serializers.patient_serializer import PatientSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
-# class IsAdminUserRole(IsAuthenticated):
-#     def has_permission(self, request, view):
-#         return super().has_permission(request, view) and request.user.role == 'admin'
-
 class PatientPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 50
 
 class PatientListCreateView(APIView):
-    # permission_classes = [IsAdminUserRole]
 
     def get(self, request):
         patients = CustomUser.objects.filter(role='patient').order_by('id')
@@ -35,7 +30,6 @@ class PatientListCreateView(APIView):
 
 
 class PatientDetailView(APIView):
-    # permission_classes = [IsAdminUserRole]
 
     def get_object(self, pk):
         return CustomUser.objects.get(pk=pk, role='patient')
@@ -69,7 +63,6 @@ class PatientDetailView(APIView):
         patient.delete()
         return Response({"message": "Patient deleted successfully."})
 class PatientCountView(APIView):
-    # permission_classes = [IsAdminUserRole]
 
     def get(self, request):
         count = CustomUser.objects.filter(role='patient').count()

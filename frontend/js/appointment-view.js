@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
-  // Populate details
+  
   document.getElementById('patientName').textContent = appointment.patient_name || "Unknown";
   document.getElementById('patientPhone').textContent = appointment.phone || "N/A";
   document.getElementById('patientID').textContent = appointment.patient || "-";
@@ -52,12 +52,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById('appointmentNotesDisplay').textContent = appointment.notes;
     document.getElementById('doctorNotesSection').style.display = "block";
   }
-  // Hide reschedule button for disallowed statuses
+  
   const rescheduleBtn = document.getElementById('rescheduleBtn');
   if (["started", "completed", "cancelled"].includes(appointment.status)) {
     rescheduleBtn.style.display = "none";
   }
-  // Previous visits
+  
   try {
     const res = await secureFetch(`/api/appointments/?patient=${appointment.patient}`, {
       headers: {
@@ -93,12 +93,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById('previousVisitsList').innerHTML = '<li>Error loading previous visits.</li>';
   }
 
-  // Modal events
+  
   document.getElementById('rescheduleBtn').addEventListener('click', () => openModal('rescheduleModal'));
   document.getElementById('cancelBtn').addEventListener('click', () => openModal('cancelModal'));
   document.getElementById('statusBtn').addEventListener('click', () => openModal('statusModal'));
 
-  // Close modals
+  
   document.querySelectorAll('.modal .close').forEach(btn => {
     btn.addEventListener('click', () => closeModal(btn.dataset.close));
   });
@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 
-  // Save Notes
   document.getElementById('saveNotesBtn').addEventListener('click', async () => {
     const notes = document.getElementById('appointmentNotes').value.trim();
     const reason= document.getElementById('notesReason').value.trim();
@@ -132,7 +131,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // Reschedule
   document.querySelector('#rescheduleModal button').addEventListener('click', async () => {
     const date = document.getElementById('newDate').value;
     const time = document.getElementById('newTime').value;
@@ -159,7 +157,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // Cancel
   document.querySelector('#cancelModal button').addEventListener('click', async () => {
     try {
       await secureFetch(`/api/appointments/${appointment.id}/cancel/`, {
@@ -176,7 +173,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // Status Update
   document.querySelector('#statusModal button').addEventListener('click', async () => {
     const status = document.getElementById('statusSelect').value;
 
@@ -201,12 +197,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // Sidebar toggle
   document.getElementById('sidebarToggle').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('collapsed');
   });
 
-  // Go back
   document.getElementById('goBackBtn').addEventListener('click', () => {
     window.history.back();
   });

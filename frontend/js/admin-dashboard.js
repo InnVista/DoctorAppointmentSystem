@@ -7,7 +7,7 @@ toggleBtn.addEventListener('click', () => {
 
 const API_BASE = "http://localhost:8000/api";
 
-// ✅ Updated API URLs (non-paginated)
+
 const DOCTORS_API = `${API_BASE}/doctors/all/`;
 const PATIENTS_API = `${API_BASE}/patients/all/`;
 const APPOINTMENTS_API = `${API_BASE}/appointments/all/`;
@@ -51,7 +51,7 @@ function drawCharts(doctors, patients, monthlyAppointments) {
   const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  // === Appointments Chart ===
+                       
   new Chart(document.getElementById('appointmentsChart'), {
     type: 'bar',
     data: {
@@ -72,8 +72,8 @@ function drawCharts(doctors, patients, monthlyAppointments) {
       }
     }
   });
+  
 
-  // === Revenue Chart ===
   const revenue = monthlyAppointments.map(count => count * 250);
   new Chart(document.getElementById('revenueChart'), {
     type: 'bar',
@@ -96,7 +96,7 @@ function drawCharts(doctors, patients, monthlyAppointments) {
     }
   });
 
-  // === Specialization Pie Chart ===
+  
   const specializationCount = {};
   doctors.forEach(doc => {
     const spec = doc.specialization?.trim() || "Others";
@@ -128,7 +128,7 @@ function drawCharts(doctors, patients, monthlyAppointments) {
     }
   });
 
-  // === Patient Growth Line Chart ===
+  
   const patientMonthly = Array(12).fill(0);
   patients.forEach(p => {
     const joined = new Date(p.date_joined || p.joining_date);
