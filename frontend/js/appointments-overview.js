@@ -158,7 +158,7 @@ function setupPatientSearch() {
     }
 
     debounce = setTimeout(() => {
-      fetch(`/api/patients/?search=${encodeURIComponent(query)}`, {
+      secureFetch(`/api/patients/?search=${encodeURIComponent(query)}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

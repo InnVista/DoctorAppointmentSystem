@@ -5,7 +5,9 @@ from .views import (
     AppointmentCancelView,
     AppointmentStatusView,
     AppointmentNotesView,
-    AppointmentStatsView
+    AppointmentStatsView,
+    AppointmentCountView,
+    AllAppointmentsView
 )
 
 urlpatterns = [
@@ -15,4 +17,6 @@ urlpatterns = [
     path('<int:pk>/status/', AppointmentStatusView.as_view()),
     path('<int:pk>/notes/', AppointmentNotesView.as_view()),
     path('stats/', AppointmentStatsView.as_view(), name='appointment-stats'),
+    path('count/', AppointmentCountView.as_view(), name='appointment-count'),
+    path('all/', AllAppointmentsView.as_view(), name='all-appointments'),
 ]

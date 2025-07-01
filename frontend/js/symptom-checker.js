@@ -93,7 +93,7 @@ document.getElementById("symptomForm").addEventListener("submit", function (e) {
     return;
   }
 
-  fetch("/api/symptom-check/", {
+  secureFetch("/api/symptom-check/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ symptoms: [...selectedSymptoms] })
@@ -124,10 +124,54 @@ function showResult(msg) {
 function showDoctors(doctors) {
   const div = document.getElementById("doctor-suggestions");
   const list = document.getElementById("doctor-list");
-  if (doctors.length > 0) {
-    list.innerHTML = doctors.map(d => `<li>${d}</li>`).join('');
-    div.style.display = "block";
-  } else {
-    div.style.display = "none";
-  }
+
+  list.innerHTML = "";
+  div.style.display = doctors.length > 0 ? "block" : "none";
+
+  doctors.forEach(specialization => {
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="#" class="specialization-link">${specialization}</a>`;
+    li.addEventListener("click", () => {
+      fetchDoctorsBySpecialization(specialization);
+    });
+    list.appendChild(li);
+  });
 }
+
+function fetchDoctorsBySpecialization(specialization) {
+  secureFetch(`/api/doctors/by-specialization/?specialization=${encodeURIComponent(specialization)}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      const doctors = data.results || [];
+      const modal = document.getElementById("doctorModal");
+      const list = document.getElementById("doctorListBySpecialization");
+      list.innerHTML = "";
+
+      if (doctors.length === 0) {
+        list.innerHTML = "<li>No doctors available</li>";
+      } else {
+        doctors.forEach(doc => {
+          const li = document.createElement("li");
+          li.textContent = `${doc.first_name} ${doc.last_name} (${doc.specialization})`;
+          li.addEventListener("click", () => {
+            const user = JSON.parse(localStorage.getItem("user") || "{}");
+            const redirectUrl = `patient-appointments.html?doctorId=${doc.id}&doctorName=${encodeURIComponent(doc.first_name + ' ' + doc.last_name)}&specialty=${encodeURIComponent(doc.specialization)}&patientId=${user.id}`;
+            window.location.href = redirectUrl;
+          });
+          list.appendChild(li);
+        });
+      }
+
+      modal.style.display = "flex";
+    })
+    .catch(() => alert("Failed to fetch doctors."));
+}
+
+document.getElementById("closeDoctorModal").addEventListener("click", () => {
+  document.getElementById("doctorModal").style.display = "none";
+});
+

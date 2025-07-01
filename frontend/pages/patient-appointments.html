@@ -1,99 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Appointments</title>
   <link rel="stylesheet" href="../css/dashboard.css" />
   <link rel="stylesheet" href="../css/patient-appointments.css" />
   <script src="../js/auth.js"></script>
   <script src="../js/patient-appointments.js" defer></script>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">
-    <img src="../images/logo.png" alt="Healthcare Logo">
+  <header>
+    <div class="logo">
+      <img src="../images/logo.png" alt="Healthcare Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="patient-dashboard.html">Patient Dashboard</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="dashboard-container">
+
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+      <ul>
+        <li><a href="patient-dashboard.html">Dashboard</a></li>
+        <li><a href="patient-appointments.html" class="active">My Appointments</a></li>
+        <!-- <li><a href="patient-reports.html">My Reports</a></li> -->
+        <li><a href="symptom-checker.html">Symptom Checker</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <h2>My Appointments</h2>
+      <button id="addAppointmentBtn" class="primary-btn">+ Add Appointment</button>
+
+      <div class="view-toggle">
+        <button id="showUpcomingBtn" class="primary-btn active">Upcoming</button>
+        <button id="showHistoryBtn" class="primary-btn">History</button>
+      </div>
+
+      <div id="appointmentsContainer"></div>
+
+      <!-- Add Appointment Modal -->
+      <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="modalClose">&times;</span>
+          <h3>New Appointment</h3>
+          <form id="newAppointmentForm">
+            <div class="form-group">
+              <label for="doctorName">Doctor *</label>
+              <input type="text" id="doctorName" autocomplete="off" required />
+              <ul id="doctorSuggestions" class="suggestions-list"></ul>
+              <input type="hidden" id="doctorId" />
+            </div>
+
+            <div class="form-group">
+              <label for="specialty">Specialty</label>
+              <input type="text" id="specialty" readonly />
+            </div>
+
+            <div class="form-group">
+              <label for="appointmentDate">Date *</label>
+              <input type="date" id="appointmentDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="appointmentTime">Time *</label>
+              <input type="time" id="appointmentTime" required />
+            </div>
+
+            <button type="submit" class="primary-btn">Save</button>
+          </form>
+        </div>
+      </div>
+      <div class="pagination-controls">
+        <button class="prev-btn" id="prevPageBtn">Previous</button>
+        <span id="pageIndicator">Page 1 of 5</span>
+        <button class="next-btn" id="nextPageBtn">Next</button>
+      </div>
+
+
+      <!-- View Appointment Modal -->
+      <div id="viewAppointmentModal" class="modal">
+        <div class="modal-content">
+          <span class="close" id="viewModalClose">&times;</span>
+          <div id="viewAppointmentContent"></div>
+        </div>
+      </div>
+
+    </main>
   </div>
-  <nav>
-    <ul>
-      <li><a href="patient-dashboard.html">Patient Dashboard</a></li>
-      <li><a href="login.html">Logout</a></li>
-    </ul>
-  </nav>
-</header>
 
-<div class="dashboard-container">
-
-  <aside class="sidebar" id="sidebar">  
-    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-    <ul>
-      <li><a href="patient-dashboard.html">Dashboard</a></li>
-      <li><a href="patient-appointments.html" class="active">My Appointments</a></li>
-      <li><a href="patient-reports.html">My Reports</a></li>
-      <li><a href="symptom-checker.html">Symptom Checker</a></li>
-      <li><a href="login.html">Logout</a></li>
-    </ul>
-  </aside>
-
-  <main class="main-content">
-    <h2>My Appointments</h2>
-    <button id="addAppointmentBtn" class="primary-btn">+ Add Appointment</button>
-
-    <div class="view-toggle">
-      <button id="showUpcomingBtn" class="primary-btn active">Upcoming</button>
-      <button id="showHistoryBtn" class="primary-btn">History</button>
-    </div>
-
-    <div id="appointmentsContainer"></div>
-
-    <!-- Add Appointment Modal -->
-    <div id="appointmentModal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="modalClose">&times;</span>
-        <h3>New Appointment</h3>
-        <form id="newAppointmentForm">
-          <div class="form-group">
-            <label for="doctorName">Doctor *</label>
-            <input type="text" id="doctorName" autocomplete="off" required />
-            <ul id="doctorSuggestions" class="suggestions-list"></ul>
-            <input type="hidden" id="doctorId" />
-          </div>
-
-          <div class="form-group">
-            <label for="specialty">Specialty</label>
-            <input type="text" id="specialty" readonly />
-          </div>
-
-          <div class="form-group">
-            <label for="appointmentDate">Date *</label>
-            <input type="date" id="appointmentDate" required />
-          </div>
-
-          <div class="form-group">
-            <label for="appointmentTime">Time *</label>
-            <input type="time" id="appointmentTime" required />
-          </div>
-
-          <button type="submit" class="primary-btn">Save</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- View Appointment Modal -->
-    <div id="viewAppointmentModal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="viewModalClose">&times;</span>
-        <div id="viewAppointmentContent"></div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<footer>
-  <div>© 2025 Doctor Appointment Management System</div>
-</footer>
+  <footer>
+    <div>© 2025 Doctor Appointment Management System</div>
+  </footer>
 
 </body>
+
 </html>

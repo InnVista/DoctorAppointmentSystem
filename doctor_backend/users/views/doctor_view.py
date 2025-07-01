@@ -127,3 +127,43 @@ class DoctorDetailView(APIView):
         doctor = self.get_object(pk)
         doctor.delete()
         return Response({"message": "Doctor deleted successfully."})
+
+class DoctorBySpecializationView(APIView):
+    def get(self, request):
+        specialization = request.query_params.get('specialization', '').strip()
+
+        if not specialization:
+            return Response(
+                {"error": "Specialization parameter is required."},
+                status=drf_status.HTTP_400_BAD_REQUEST
+            )
+
+        doctors = CustomUser.objects.filter(
+            role='doctor',
+            specialization__icontains=specialization
+        )
+
+        if not doctors.exists():
+            return Response(
+                {"message": "No doctors found with the given specialization."},
+                status=drf_status.HTTP_404_NOT_FOUND
+            )
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(doctors, request)
+        serializer = DoctorSerializer(result_page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
+class DoctorCountView(APIView):
+    permission_classes = [IsAdminUserRole]
+
+    def get(self, request):
+        total = CustomUser.objects.filter(role='doctor').count()
+        return Response({"total_doctors": total}, status=drf_status.HTTP_200_OK)
+
+class AllDoctorsView(APIView):
+    def get(self, request):
+        doctors = CustomUser.objects.filter(role='doctor')
+        serializer = DoctorSerializer(doctors, many=True)
+        return Response(serializer.data)

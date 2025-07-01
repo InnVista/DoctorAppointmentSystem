@@ -32,7 +32,6 @@
         <ul>
           <li><a href="patient-dashboard.html">Dashboard</a></li>
           <li><a href="patient-appointments.html">My Appointments</a></li>
-          <li><a href="patient-reports.html" >My Reports</a></li>
           <li><a href="symptom-checker.html" class="active">Symptom checker</a></li>
           <li><a href="login.html">Logout</a></li>
         </ul>
@@ -68,6 +67,15 @@
                 <h3>Suggested Doctors:</h3>
                 <ul id="doctor-list"></ul>
             </div>
+            <!-- Modal to show doctors by specialization -->
+            <div id="doctorModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" id="closeDoctorModal">&times;</span>
+                <h3>Select a Doctor</h3>
+                <ul id="doctorListBySpecialization"></ul>
+            </div>
+            </div>
+
         </main>
     </div>
 

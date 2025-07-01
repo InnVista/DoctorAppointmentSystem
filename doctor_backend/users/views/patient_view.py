@@ -68,3 +68,16 @@ class PatientDetailView(APIView):
         patient = self.get_object(pk)
         patient.delete()
         return Response({"message": "Patient deleted successfully."})
+class PatientCountView(APIView):
+    # permission_classes = [IsAdminUserRole]
+
+    def get(self, request):
+        count = CustomUser.objects.filter(role='patient').count()
+        return Response({"total_patients": count}, status=status.HTTP_200_OK)
+
+
+class AllPatientsView(APIView):
+    def get(self, request):
+        patients = CustomUser.objects.filter(role='patient')
+        serializer = PatientSerializer(patients, many=True)
+        return Response(serializer.data)

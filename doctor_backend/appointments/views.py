@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from collections import defaultdict
 from calendar import month_name
+from rest_framework import status
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AppointmentListCreateView(APIView):
@@ -173,3 +174,26 @@ class AppointmentStatsView(APIView):
             "lastVisit": last_visit,
             "monthlyHistory": monthly_data
         })
+    
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AppointmentCountView(APIView):
+
+    def get(self, request):
+        user = request.user
+        if user.role == 'doctor':
+            total = Appointment.objects.filter(doctor=user).count()
+        elif user.role == 'patient':
+            total = Appointment.objects.filter(patient=user).count()
+        else:
+            total = Appointment.objects.all().count()
+        
+        return Response({"total_appointments": total}, status=status.HTTP_200_OK)
+    
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AllAppointmentsView(APIView):
+    def get(self, request):
+        appointments = Appointment.objects.all().order_by('-appointment_date', '-appointment_time')
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)

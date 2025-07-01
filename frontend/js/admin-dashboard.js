@@ -7,22 +7,23 @@ toggleBtn.addEventListener('click', () => {
 
 const API_BASE = "http://localhost:8000/api";
 
+// ✅ Updated API URLs (non-paginated)
+const DOCTORS_API = `${API_BASE}/doctors/all/`;
+const PATIENTS_API = `${API_BASE}/patients/all/`;
+const APPOINTMENTS_API = `${API_BASE}/appointments/all/`;
+
 // Fetch data and initialize dashboard
 async function fetchData() {
   try {
     const [doctorsRes, patientsRes, appointmentsRes] = await Promise.all([
-      secureFetch(`${API_BASE}/doctors/`),
-      secureFetch(`${API_BASE}/patients/`),
-      secureFetch(`${API_BASE}/appointments/`)
+      secureFetch(DOCTORS_API),
+      secureFetch(PATIENTS_API),
+      secureFetch(APPOINTMENTS_API)
     ]);
 
-    const doctorsData = await doctorsRes.json();
-    const patientsData = await patientsRes.json();
-    const appointmentsData = await appointmentsRes.json();
-
-    const doctors = doctorsData.results || doctorsData;
-    const patients = patientsData.results || patientsData;
-    const appointments = appointmentsData;
+    const doctors = await doctorsRes.json();
+    const patients = await patientsRes.json();
+    const appointments = await appointmentsRes.json();
 
     // === Dashboard Counts ===
     document.getElementById('totalDoctors').textContent = doctors.length;
@@ -47,7 +48,8 @@ async function fetchData() {
 }
 
 function drawCharts(doctors, patients, monthlyAppointments) {
-  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // === Appointments Chart ===
   new Chart(document.getElementById('appointmentsChart'), {

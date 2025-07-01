@@ -9,7 +9,7 @@ const pageSize = 10;
 async function fetchPatients(page = 1) {
   try {
     const response = await secureFetch(`/api/patients/?page=${page}&page_size=${pageSize}`);
-    if (!response.ok) 
+    if (!response.ok)
       Notifier.error(response)
     const data = await response.json();
     renderPatients(data.results);
@@ -30,10 +30,8 @@ function renderPatients(patients) {
       <tr>
         <td>${p.id}</td>
         <td>${fullName}</td>
-        <td>${p.age || '-'}</td>
         <td>${p.gender || '-'}</td>
         <td>${p.phone || '-'}</td>
-        <td>${p.condition || 'N/A'}</td>
         <td>
           <a href="../pages/admin/patient-view.html?id=${p.id}" class="action-btn">View</a>
         </td>

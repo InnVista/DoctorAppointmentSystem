@@ -1,62 +1,54 @@
 document.addEventListener("DOMContentLoaded", () => {
   let appointments = [];
+  let currentPage = 1;
+  const pageSize = 5;
 
   const container = document.getElementById("appointmentsContainer");
   const upcomingBtn = document.getElementById("showUpcomingBtn");
   const historyBtn = document.getElementById("showHistoryBtn");
+  const pageIndicator = document.getElementById("pageIndicator");
+  const prevPageBtn = document.getElementById("prevPageBtn");
+  const nextPageBtn = document.getElementById("nextPageBtn");
 
   const doctorInput = document.getElementById("doctorName");
   const doctorIdField = document.getElementById("doctorId");
   const specialtyInput = document.getElementById("specialty");
   const doctorSuggestions = document.getElementById("doctorSuggestions");
-
   const appointmentDateInput = document.getElementById("appointmentDate");
+
+  let showHistory = false;
   const today = new Date().toISOString().split("T")[0];
   appointmentDateInput.min = today;
-
-  function fetchAppointments() {
-    secureFetch("/api/appointments/", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token")
-      }
-    })
-      .then(res => res.json())
-      .then(data => {
-        appointments = data;
-        renderAppointments(false);
-        upcomingBtn.classList.add("active");
-        historyBtn.classList.remove("active");
-      })
-      .catch(() => {
-        container.innerHTML = "<p>Error loading appointments.</p>";
-      });
-  }
 
   function isUpcoming(dateStr) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const appDate = new Date(dateStr);
-    return appDate >= today;
+    return new Date(dateStr) >= today;
   }
 
-  function renderAppointments(showHistory = false) {
+  function renderAppointments() {
     container.innerHTML = "";
-
     const filtered = appointments.filter(app =>
       showHistory ? !isUpcoming(app.appointment_date) : isUpcoming(app.appointment_date)
     );
 
+    const totalPages = Math.ceil(filtered.length / pageSize);
+    const start = (currentPage - 1) * pageSize;
+    const paginated = filtered.slice(start, start + pageSize);
+
     if (filtered.length === 0) {
       container.innerHTML = `<p>No ${showHistory ? "past" : "upcoming"} appointments.</p>`;
+      pageIndicator.textContent = "Page 0 of 0";
+      prevPageBtn.disabled = true;
+      nextPageBtn.disabled = true;
       return;
     }
 
-    filtered.forEach(app => {
+    paginated.forEach(app => {
       const card = document.createElement("div");
       card.classList.add("appointment-card");
-
       if (app.status === "completed") card.classList.add("completed");
-      else if (app.status === "cancelled") card.classList.add("cancelled");
+      if (app.status === "cancelled") card.classList.add("cancelled");
 
       card.innerHTML = `
         <h3>${app.doctor_name || "Unknown"}</h3>
@@ -67,16 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
         ${app.status !== "cancelled" ? `<button class="cancel-btn">Cancel</button>` : ""}
       `;
 
-      // Cancel appointment
+      const viewBtn = card.querySelector(".view-btn");
+      viewBtn.addEventListener("click", () => showAppointmentDetails(app));
+
       const cancelBtn = card.querySelector(".cancel-btn");
       if (cancelBtn) {
         cancelBtn.addEventListener("click", () => {
-          if (confirm("Are you sure you want to cancel this appointment?")) {
+          if (confirm("Cancel this appointment?")) {
             secureFetch(`/api/appointments/${app.id}/cancel/`, {
               method: "POST",
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("token")
-              }
+              headers: { Authorization: "Bearer " + localStorage.getItem("token") }
             })
               .then(res => {
                 if (!res.ok) throw new Error("Cancel failed");
@@ -86,20 +78,71 @@ document.addEventListener("DOMContentLoaded", () => {
                 Notifier.success("Appointment cancelled.");
                 fetchAppointments();
               })
-              .catch(() => Notifier.error("Failed to cancel appointment."));
+              .catch(() => Notifier.error("Failed to cancel."));
           }
         });
       }
 
-      // View appointment
-      const viewBtn = card.querySelector(".view-btn");
-      viewBtn.addEventListener("click", () => {
-        showAppointmentDetails(app);
-      });
-
       container.appendChild(card);
     });
+
+    pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+    prevPageBtn.disabled = currentPage <= 1;
+    nextPageBtn.disabled = currentPage >= totalPages;
   }
+
+  function fetchAppointments() {
+    secureFetch("/api/appointments/", {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+    })
+      .then(res => res.json())
+      .then(data => {
+        appointments = data;
+        currentPage = 1;
+        renderAppointments();
+        toggleTabButtons();
+      })
+      .catch(() => {
+        container.innerHTML = "<p>Error loading appointments.</p>";
+      });
+  }
+
+  function toggleTabButtons() {
+    upcomingBtn.classList.toggle("active", !showHistory);
+    historyBtn.classList.toggle("active", showHistory);
+  }
+
+  // Pagination
+  prevPageBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderAppointments();
+    }
+  });
+
+  nextPageBtn.addEventListener("click", () => {
+    const totalPages = Math.ceil(appointments.filter(app =>
+      showHistory ? !isUpcoming(app.appointment_date) : isUpcoming(app.appointment_date)
+    ).length / pageSize);
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderAppointments();
+    }
+  });
+
+  upcomingBtn.addEventListener("click", () => {
+    showHistory = false;
+    currentPage = 1;
+    renderAppointments();
+    toggleTabButtons();
+  });
+
+  historyBtn.addEventListener("click", () => {
+    showHistory = true;
+    currentPage = 1;
+    renderAppointments();
+    toggleTabButtons();
+  });
 
   function showAppointmentDetails(app) {
     const modal = document.createElement("div");
@@ -117,16 +160,13 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
     document.body.appendChild(modal);
-
-    const closeBtn = modal.querySelector(".close");
-    closeBtn.addEventListener("click", () => document.body.removeChild(modal));
+    modal.querySelector(".close").addEventListener("click", () => document.body.removeChild(modal));
     modal.addEventListener("click", e => {
       if (e.target === modal) document.body.removeChild(modal);
     });
-
-    modal.style.display = "block";
   }
 
+  // Doctor Suggestions
   function setupDoctorSuggestions() {
     doctorInput.addEventListener("input", () => {
       const query = doctorInput.value.trim();
@@ -137,46 +177,36 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       secureFetch(`/api/doctors/search/?search=${encodeURIComponent(query)}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token")
-        }
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
       })
         .then(res => res.json())
         .then(data => {
-          const doctors = data.results || [];
           doctorSuggestions.innerHTML = "";
-
+          const doctors = data.results || [];
           if (doctors.length === 0) {
             doctorSuggestions.style.display = "none";
             return;
           }
 
           doctors.forEach(doc => {
-            const fullName = `${doc.first_name} ${doc.last_name}`.trim();
+            const fullName = `${doc.first_name} ${doc.last_name}`;
             const li = document.createElement("li");
             li.textContent = fullName;
             li.dataset.id = doc.id;
             li.dataset.specialization = doc.specialization;
-
             li.addEventListener("click", () => {
               doctorInput.value = fullName;
               doctorIdField.value = doc.id;
-              specialtyInput.value = doc.specialization || "";
+              specialtyInput.value = doc.specialization;
               doctorSuggestions.innerHTML = "";
               doctorSuggestions.style.display = "none";
             });
-
             doctorSuggestions.appendChild(li);
           });
-
           doctorSuggestions.style.display = "block";
-        })
-        .catch(err => {
-          console.error("Doctor search failed:", err);
         });
     });
 
-    // Hide suggestions if user clicks elsewhere
     document.addEventListener("click", e => {
       if (!doctorSuggestions.contains(e.target) && e.target !== doctorInput) {
         doctorSuggestions.innerHTML = "";
@@ -185,18 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  upcomingBtn.addEventListener("click", () => {
-    renderAppointments(false);
-    upcomingBtn.classList.add("active");
-    historyBtn.classList.remove("active");
-  });
-
-  historyBtn.addEventListener("click", () => {
-    renderAppointments(true);
-    historyBtn.classList.add("active");
-    upcomingBtn.classList.remove("active");
-  });
-
+  // Appointment Modal
   document.getElementById("addAppointmentBtn").addEventListener("click", () => {
     document.getElementById("appointmentModal").style.display = "block";
   });
@@ -214,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const time = document.getElementById("appointmentTime").value;
 
     if (!doctorId || !patientId) {
-      Notifier.error("Please select a valid doctor and ensure you're logged in.");
+      Notifier.error("Please select a doctor and ensure you're logged in.");
       return;
     }
 
@@ -239,19 +258,29 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
       })
       .then(() => {
-        Notifier.success("Appointment added.");
-        document.getElementById("appointmentModal").style.display = "none";
-        e.target.reset();
-        fetchAppointments();
+        sessionStorage.setItem("redirectedAfterBooking", "true");
+        window.location.href = "patient-appointments.html";
       })
-      .catch(() => Notifier.error("Failed to add appointment."));
+      .catch(() => Notifier.error("Failed to book appointment."));
   });
+
+  // Auto open modal if redirected from search
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirected = sessionStorage.getItem("redirectedAfterBooking");
+  sessionStorage.removeItem("redirectedAfterBooking");
+
+  if (!redirected && urlParams.has("doctorId")) {
+    doctorIdField.value = urlParams.get("doctorId");
+    doctorInput.value = decodeURIComponent(urlParams.get("doctorName") || "");
+    specialtyInput.value = decodeURIComponent(urlParams.get("specialty") || "");
+    document.getElementById("appointmentModal").style.display = "block";
+  }
 
   document.getElementById("sidebarToggle").addEventListener("click", () => {
     document.getElementById("sidebar").classList.toggle("collapsed");
   });
 
-  // Initial load
+  // Initialize
   fetchAppointments();
   setupDoctorSuggestions();
 });
