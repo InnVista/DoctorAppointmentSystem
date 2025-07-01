@@ -220,11 +220,11 @@ function setupModalHandlers() {
       body: JSON.stringify(payload),
     })
       .then(res => {
-        if (!res.ok) return res.json().then(err => Promise.reject(err));
+        if (!res.ok) return Notifier.error(res).then(err => Promise.reject(err));
         return res.json();
       })
       .then(() => {
-        alert(`Appointment booked successfully for ${name} on ${date} at ${time}.`);
+        Notifier.success(`Appointment booked successfully for ${name} on ${date} at ${time}.`);
         closeNewAppointmentModal();
         fetchAppointments();
       })

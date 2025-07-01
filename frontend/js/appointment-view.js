@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const appointmentId = getQueryParam("id");
 
   if (!appointmentId) {
-    alert("No appointment ID provided.");
+    Notifier("No appointment ID provided.");
     window.location.href = "doctor-appointment-overview.html";
     return;
   }
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (!appointment.id) throw new Error("Invalid appointment data.");
   } catch (err) {
-    alert("Failed to load appointment.");
+    Notifier.error("Failed to load appointment.");
     window.location.href = "doctor-appointment-overview.html";
     return;
   }
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById('saveNotesBtn').addEventListener('click', async () => {
     const notes = document.getElementById('appointmentNotes').value.trim();
     const reason= document.getElementById('notesReason').value.trim();
-    if (!notes) return alert("Please enter notes.");
+    if (!notes) return Notifier.error("Please enter notes.");
 
     try {
       await secureFetch(`/api/appointments/${appointment.id}/`, {
@@ -126,9 +126,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
       
     document.getElementById('appointmentReason').textContent = reason || appointment.reason;
-      alert("Notes saved successfully.");
+      Notifier.success("Notes saved successfully.");
     } catch {
-      alert("Failed to save notes.");
+      Notifier.error("Failed to save notes.");
     }
   });
 
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.querySelector('#rescheduleModal button').addEventListener('click', async () => {
     const date = document.getElementById('newDate').value;
     const time = document.getElementById('newTime').value;
-    if (!date || !time) return alert("Please enter both date and time.");
+    if (!date || !time) return Notifier.error("Please enter both date and time.");
 
     try {
       await secureFetch(`/api/appointments/${appointment.id}/`, {
@@ -151,11 +151,11 @@ document.addEventListener("DOMContentLoaded", async function () {
           status: "rescheduled"
         })
       });
-      alert(`Appointment rescheduled to ${date} at ${time}`);
+      Notifier.success(`Appointment rescheduled to ${date} at ${time}`);
       closeModal('rescheduleModal');
       location.reload(); // reload to reflect changes
     } catch {
-      alert("Reschedule failed.");
+      Notifier.error("Reschedule failed.");
     }
   });
 
@@ -168,11 +168,11 @@ document.addEventListener("DOMContentLoaded", async function () {
           Authorization: "Bearer " + token
         }
       });
-      alert("Appointment cancelled.");
+      Notifier.success("Appointment cancelled.");
       closeModal('cancelModal');
       location.reload();
     } catch {
-      alert("Cancellation failed.");
+      Notifier.error("Cancellation failed.");
     }
   });
 
@@ -188,12 +188,16 @@ document.addEventListener("DOMContentLoaded", async function () {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({ status })
+      })
+      .then(res => {
+        if (!res.ok) return Notifier.error(res).then(err => Promise.reject(err));
+        return res.json();
       });
-      alert(`Status updated to ${status}`);
+      Notifier.success(`Status updated to ${status}`);
       closeModal('statusModal');
       location.reload();
     } catch {
-      alert("Failed to update status.");
+      Notifier.error("Failed to update status.");
     }
   });
 

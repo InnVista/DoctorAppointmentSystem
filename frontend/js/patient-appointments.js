@@ -83,10 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return res.json();
               })
               .then(() => {
-                alert("Appointment cancelled.");
+                Notifier.success("Appointment cancelled.");
                 fetchAppointments();
               })
-              .catch(() => alert("Failed to cancel appointment."));
+              .catch(() => Notifier.error("Failed to cancel appointment."));
           }
         });
       }
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const time = document.getElementById("appointmentTime").value;
 
     if (!doctorId || !patientId) {
-      alert("Please select a valid doctor and ensure you're logged in.");
+      Notifier.error("Please select a valid doctor and ensure you're logged in.");
       return;
     }
 
@@ -239,12 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
       })
       .then(() => {
-        alert("Appointment added.");
+        Notifier.success("Appointment added.");
         document.getElementById("appointmentModal").style.display = "none";
         e.target.reset();
         fetchAppointments();
       })
-      .catch(() => alert("Failed to add appointment."));
+      .catch(() => Notifier.error("Failed to add appointment."));
   });
 
   document.getElementById("sidebarToggle").addEventListener("click", () => {

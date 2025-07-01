@@ -28,7 +28,7 @@ async function secureFetch(url, options = {}) {
       response = await fetch(url, options);
     } else {
       // Refresh token expired or invalid
-      alert('Session expired. Please login again.');
+      Notifier.error('Session expired. Please login again.');
       localStorage.clear();
       window.location.href = '/pages/login.html';
     }
@@ -58,11 +58,6 @@ function showFlashMessage(message) {
   link.href = '../css/notification.css';
   document.head.appendChild(link);
 
-  if (!window.Notifier) {
-    const script = document.createElement('script');
-    script.src = 'notification.js';
-    document.body.appendChild(script);
-  }
   const link1 = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = '../../../css/notification.css';
@@ -70,7 +65,29 @@ function showFlashMessage(message) {
 
   if (!window.Notifier) {
     const script = document.createElement('script');
+    script.src = 'notification.js';
+    document.body.appendChild(script);
+  }
+  
+  if (!window.Notifier) {
+    const script = document.createElement('script');
+    script.src = 'js/notification.js';
+    document.body.appendChild(script);
+  }
+  if (!window.Notifier) {
+    const script = document.createElement('script');
+    script.src = '../js/notification.js';
+    document.body.appendChild(script);
+  }
+
+  if (!window.Notifier) {
+    const script = document.createElement('script');
     script.src = '../../js/notification.js';
+    document.body.appendChild(script);
+  }
+  if (!window.Notifier) {
+    const script = document.createElement('script');
+    script.src = '../../../js/notification.js';
     document.body.appendChild(script);
   }
 })();

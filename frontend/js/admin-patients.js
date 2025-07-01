@@ -10,12 +10,12 @@ async function fetchPatients(page = 1) {
   try {
     const response = await secureFetch(`/api/patients/?page=${page}&page_size=${pageSize}`);
     if (!response.ok) 
-      notification.error(response)
+      Notifier.error(response)
     const data = await response.json();
     renderPatients(data.results);
     setupPagination(data.count, page);
   } catch (error) {
-    notification.error(error.message);
+    Notifier.error(error.message);
   }
 }
 

@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = await response.json();
 
         if (response.ok) {
-            alert("Signup successful!");
+            Notifier.success("Signup successful!");
             window.location.href = "login.html";
         } else {
-            alert("Signup failed:\n" + JSON.stringify(data));
+            Notifier.error("Signup failed:\n" + JSON.stringify(data));
         }
     });
 });

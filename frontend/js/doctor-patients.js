@@ -15,7 +15,7 @@ async function fetchPatients(page = 1) {
     renderPatients(data.results);
     setupPagination(data.count, page);
   } catch (error) {
-    alert(error.message);
+    Notifier.error(error.message);
   }
 }
 

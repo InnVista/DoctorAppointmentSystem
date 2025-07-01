@@ -46,10 +46,10 @@ const mockReports = [
       mockReports.unshift({ id: Date.now(), name: file.name, date: today });
   
       renderReports();
-      alert("Report uploaded successfully.");
+      Notifier.success("Report uploaded successfully.");
       fileInput.value = ""; // Clear the file input
     } else {
-      alert("Please select a file.");
+      Notifier.error("Please select a file.");
     }
   });
   

@@ -129,7 +129,7 @@ function setupModalHandlers() {
 
 // Reschedule (dummy placeholder)
 function rescheduleAppointment(id) {
-  alert("Reschedule logic is coming soon");
+  Notifier.success("Reschedule logic is coming soon");
 }
 
 // Add new appointment modal trigger
